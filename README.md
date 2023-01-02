@@ -3,14 +3,12 @@
 **Endpoints** The following endpoints are available:
 
  - `/region` This endpoint returns the region information for the current
-   track. The response includes the position and length of the region in
-   seconds.
+   track. The response includes the region names given in the project file
    
    `/transport` This endpoint returns the transport state for REAPER. The
-   response includes the current position in seconds and the status of
-   the transport (playing or stopped).
+   response includes the current position.
    
-   `/lyrics` This endpoint returns the lyrics for the current track.
+   `/lyrics` This endpoint returns the lyrics for the designated track. e.g. GET request to (localhost:3000/lyrics?track=1) 
 
 Usage To use RATS, send a GET request to one of the above endpoints. The endpoint can be accessed on localhost:3000.
 
