@@ -2,8 +2,7 @@
 
 **Endpoints** The following endpoints are available:
 
- - `/region` This endpoint returns the region information for the current
-   track. The response includes the region names given in the project file
+ - `/region` The response includes the region names given in the project file
    
    `/transport` This endpoint returns the transport state for REAPER. The
    response includes the current position.
