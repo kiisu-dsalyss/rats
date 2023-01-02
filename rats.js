@@ -31,6 +31,6 @@ app.get('/transport', handleRequest(transport.endpoint, transport.parseTransport
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
 
-app.listen(3000, () => {
-  console.log('Reaper API Teleprompter Service (RATS) listening on port 3000');
+app.listen(config.port, () => {
+  console.log(`Reaper API Teleprompter Service (RATS) listening on port ${config.port}`);
 });
