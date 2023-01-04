@@ -73,6 +73,12 @@ const handleSongRequest = (req, res) => {
   });
 };
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // allow requests from any domain
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get('/song', handleSongRequest);
 app.get('/transport', handleRequest(transport.endpoint, transport.parseTransportResponse));
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));

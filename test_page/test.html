@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Song Lyrics</title>
+  <style>
+    .highlight {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div id="position"></div>
+  <h1>Song Lyrics</h1>
+  <table id="lyrics">
+  </table>
+  <button id="toggle-button" onclick="toggleResponse()">Show Response</button>
+  <pre id="response" style="display: none;"></pre>
+  <button id="update-button" onclick="toggleUpdates()">Stop Updates</button>
+  <script src="scripts/lyrics.js"></script>
+</body>
+</html>
