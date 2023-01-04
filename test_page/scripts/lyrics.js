@@ -7,12 +7,27 @@ function updateLyrics(position) {
   var lyricsTable = document.getElementById("lyrics");
   lyricsTable.innerHTML = ""; // clear the table
 
+  // Add a variable to store the last successful match
+  var lastMatch = null;
   var match = null;
   for (var time in lyrics) {
-    if (time.split('.')[0] == position.split('.')[0]) {
+    // Split the time string into an array of three elements
+    var timeParts = time.split('.');
+
+    // Split the position string into an array of three elements
+    var positionParts = position.split('.');
+
+    // Compare the first and second elements of the arrays
+    if (timeParts[0] == positionParts[0] && timeParts[1] == positionParts[1]) {
       match = lyrics[time];
+      lastMatch = match; // Update the last successful match
       break;
     }
+  }
+
+  // If no new match was found, use the last successful match instead
+  if (!match) {
+    match = lastMatch;
   }
 
   for (var time in lyrics) {
@@ -28,7 +43,6 @@ function updateLyrics(position) {
 
   document.getElementById("position").innerHTML = "Position: " + position + " <b>" + (match ? match : "") + "</b>";
 }
-
 
 function highlightRow(row, prevRow, reset) {
   if (prevRow) {
@@ -82,7 +96,7 @@ function toggleUpdates() {
     updateInterval = null;
     document.getElementById("update-button").innerHTML = "Start Updates";
   } else {
-    updateInterval = setInterval(update, 50); // update every 50 milliseconds
+    updateInterval = setInterval(update, 100); // update every 50 milliseconds
     document.getElementById("update-button").innerHTML = "Stop Updates";
   }
 }
