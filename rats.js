@@ -34,37 +34,72 @@ const combineEndpointResponses = (transportResponse, regionResponse, lyricsRespo
   };
 }
 
+const cache = {};
+
 const handleSongRequest = (req, res) => {
   const trackId = req.query.track;
-  Promise.all([
-    new Promise((resolve, reject) => {
-      request(`${baseUrl}${transport.endpoint}`, (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(transport.parseTransportResponse(body));
-        }
-      });
-    }),
-    new Promise((resolve, reject) => {
-      request(`${baseUrl}${region.endpoint}`, (error, response, body) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(region.parseRegionResponse(body));
-        }
-      });
-    }),
-    new Promise((resolve, reject) => {
+
+  // Set the expiration time for the cache (1 minute in this example)
+  const cacheExpiration = Date.now() + (1 * 60 * 1000);
+
+  // Check the cache for saved responses from the lyrics and regions endpoints
+  const lyricsResponse = cache[`lyrics${trackId}`];
+  const regionResponse = cache[`regions`];
+
+  // If a cached response is available and has not expired, use it instead of sending a new request
+  let lyricsPromise;
+  if (lyricsResponse && lyricsResponse.timestamp > Date.now()) {
+    lyricsPromise = Promise.resolve(lyricsResponse.data);
+  } else {
+    lyricsPromise = new Promise((resolve, reject) => {
       request(`${baseUrl}${lyrics.endpoint}${trackId}`, (error, response, body) => {
         if (error) {
           reject(error);
         } else {
+          // Update the cache with the new response
+          cache[`lyrics${trackId}`] = {
+            timestamp: cacheExpiration,
+            data: lyrics.parseLyricsResponse(body),
+          };
           resolve(lyrics.parseLyricsResponse(body));
         }
       });
-    })
-  ])
+    });
+  }
+
+  let regionPromise;
+  if (regionResponse && regionResponse.timestamp > Date.now()) {
+    regionPromise = Promise.resolve(regionResponse.data);
+  } else {
+    regionPromise = new Promise((resolve, reject) => {
+      request(`${baseUrl}${region.endpoint}`, (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          // Update the cache with the new response
+          cache[`regions`] = {
+            timestamp: cacheExpiration,
+            data: region.parseRegionResponse(body),
+          };
+          resolve(region.parseRegionResponse(body));
+        }
+      });
+    });
+  }
+
+  // Send a request to the transport endpoint (no caching is used for this endpoint)
+  const transportPromise = new Promise((resolve, reject) => {
+    request(`${baseUrl}${transport.endpoint}`, (error, response, body) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(transport.parseTransportResponse(body));
+      }
+    });
+  });
+
+  // Wait for all the promises to resolve and then combine the responses
+  Promise.all([transportPromise, regionPromise, lyricsPromise])
   .then(([transportResponse, regionResponse, lyricsResponse]) => {
     res.json(combineEndpointResponses(transportResponse, regionResponse, lyricsResponse));
   })
@@ -72,6 +107,7 @@ const handleSongRequest = (req, res) => {
     res.status(500).json({ error: 'Error accessing endpoints' });
   });
 };
+
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // allow requests from any domain
