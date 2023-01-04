@@ -1,16 +1,14 @@
 var updateInterval = null;
-
-var lastMatchedRow = null;
+var lastMatch = null;
 
 function updateLyrics(position) {
   var lyrics = response.lyrics.Position;
   var lyricsTable = document.getElementById("lyrics");
-  lyricsTable.innerHTML = ""; // clear the table
 
   // Add a variable to store the last successful match
-  var lastMatch = null;
   var match = null;
   for (var time in lyrics) {
+    console.log(lastMatch);
     // Split the time string into an array of three elements
     var timeParts = time.split('.');
 
@@ -20,14 +18,14 @@ function updateLyrics(position) {
     // Compare the first and second elements of the arrays
     if (timeParts[0] == positionParts[0] && timeParts[1] == positionParts[1]) {
       match = lyrics[time];
-      lastMatch = match; // Update the last successful match
+      if (match === null) {
+        match = lastMatch;
+      }
+      if (match !== null) {
+        lastMatch = match;
+      }
       break;
     }
-  }
-
-  // If no new match was found, use the last successful match instead
-  if (!match) {
-    match = lastMatch;
   }
 
   for (var time in lyrics) {
@@ -40,22 +38,8 @@ function updateLyrics(position) {
       row.classList.add("highlight");
     }
   }
-
-  document.getElementById("position").innerHTML = "Position: " + position + " <b>" + (match ? match : "") + "</b>";
+  document.getElementById("position").innerHTML = "measure: " + position + " <b>" + (match || lastMatch || "") + "</b>";
 }
-
-function highlightRow(row, prevRow, reset) {
-  if (prevRow) {
-    if (reset) {
-      prevRow.classList.remove("highlight");
-    } else {
-      prevRow.classList.add("previous-highlight");
-      prevRow.classList.remove("highlight");
-    }
-  }
-  row.classList.add("highlight");
-}
-
 
 function update() {
   var xhttp = new XMLHttpRequest();
@@ -65,13 +49,12 @@ function update() {
       response = JSON.parse(this.responseText);
       document.getElementById("response").innerHTML = JSON.stringify(response, null, 2);
       if (response.transport.playing == "1") {
-        document.getElementById("position").innerHTML = "Position: " + response.transport.Position;
+        document.getElementById("position").innerHTML = "measure: " + response.transport.measure;
         document.getElementById("lyrics").innerHTML = "";
-        updateLyrics(response.transport.Position);
+        updateLyrics(response.transport.measure);
       } else {
         document.getElementById("position").innerHTML = "";
         document.getElementById("lyrics").innerHTML = "";
-//         lastMatchedPosition = null;
       }
     }
   };
