@@ -26,7 +26,54 @@ const handleRequest = (endpoint, parseResponse) => {
   };
 };
 
+const combineEndpointResponses = (transportResponse, regionResponse, lyricsResponse) => {
+  return {
+    transport: transportResponse,
+    region: regionResponse,
+    lyrics: lyricsResponse
+  };
+}
 
+const handleSongRequest = (req, res) => {
+  const trackId = req.query.track;
+  Promise.all([
+    new Promise((resolve, reject) => {
+      request(`${baseUrl}${transport.endpoint}`, (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(transport.parseTransportResponse(body));
+        }
+      });
+    }),
+    new Promise((resolve, reject) => {
+      request(`${baseUrl}${region.endpoint}`, (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(region.parseRegionResponse(body));
+        }
+      });
+    }),
+    new Promise((resolve, reject) => {
+      request(`${baseUrl}${lyrics.endpoint}${trackId}`, (error, response, body) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(lyrics.parseLyricsResponse(body));
+        }
+      });
+    })
+  ])
+  .then(([transportResponse, regionResponse, lyricsResponse]) => {
+    res.json(combineEndpointResponses(transportResponse, regionResponse, lyricsResponse));
+  })
+  .catch((error) => {
+    res.status(500).json({ error: 'Error accessing endpoints' });
+  });
+};
+
+app.get('/song', handleSongRequest);
 app.get('/transport', handleRequest(transport.endpoint, transport.parseTransportResponse));
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
