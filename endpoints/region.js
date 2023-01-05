@@ -2,10 +2,15 @@ exports.parseRegionResponse = (responseBody) => {
   const lines = responseBody.split('\n');
   console.log(lines);
   const regions = [];
+  let counter = 1;
   for (let i = 1; i < lines.length - 1; i++) {
     const values = lines[i].split('\t');
     if (values[0] === 'REGION') {
-      const regionName = values[1] || '-';
+      let regionName = values[1] || '-';
+      if (regions.find(region => region.name === regionName)) {
+        regionName += ` ${counter}`;
+        counter++;
+      }
       regions.push({
         name: regionName,
         start: parseInt(values[3], 10),

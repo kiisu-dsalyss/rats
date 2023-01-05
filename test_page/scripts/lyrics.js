@@ -49,6 +49,29 @@ function decimalToHex(decimal) {
 }
 
 function update() {
+  // Find the index of the current region
+  var currentRegionIndex = -1;
+  for (var regionName in response.region) {
+    currentRegionIndex++;
+    var region = response.region[regionName];
+    if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
+      break;
+    }
+  }
+
+  // Get the previous region
+  var previousRegionName = null;
+  var previousRegionColor = null;
+  if (currentRegionIndex > 0) {
+    var regionNames = Object.keys(response.region);
+    previousRegionName = regionNames[currentRegionIndex - 1];
+    previousRegionColor = response.region[previousRegionName].Color;
+  }
+
+  // Update the previousRegionBanner element
+  document.getElementById("previousRegionBanner").innerHTML = previousRegionName || "";
+  document.getElementById("previousRegionBanner").style.backgroundColor = previousRegionColor ? "#" + decimalToHex(previousRegionColor) : "#808080";
+
   var xhttp = new XMLHttpRequest();
   lastMatchedPosition = null;
   xhttp.onreadystatechange = function() {
@@ -101,7 +124,7 @@ function toggleUpdates() {
     updateInterval = null;
     document.getElementById("update-button").innerHTML = "Start Updates";
   } else {
-    updateInterval = setInterval(update, 100); // update every 50 milliseconds
+    updateInterval = setInterval(update, 300); // update every 50 milliseconds
     document.getElementById("update-button").innerHTML = "Stop Updates";
   }
 }
