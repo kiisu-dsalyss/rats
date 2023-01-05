@@ -8,7 +8,6 @@ function updateLyrics(position) {
   // Add a variable to store the last successful match
   var match = null;
   for (var time in lyrics) {
-    console.log(lastMatch);
     // Split the time string into an array of three elements
     var timeParts = time.split('.');
 
@@ -41,12 +40,35 @@ function updateLyrics(position) {
   document.getElementById("position").innerHTML = "measure: " + position + " <b>" + (match || lastMatch || "") + "</b>";
 }
 
+function decimalToHex(decimal) {
+  var hex = decimal.toString(16);
+  while (hex.length < 6) {
+    hex = "0" + hex;
+  }
+  return hex.substring(1);
+}
+
 function update() {
   var xhttp = new XMLHttpRequest();
   lastMatchedPosition = null;
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       response = JSON.parse(this.responseText);
+      for (var regionName in response.region) {
+        var region = response.region[regionName];
+          console.log("response.transport.time: " + response.transport.time);
+        if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
+          console.log("response.transport.time: " + response.transport.time);
+          console.log("region.Start: " + region.Start);
+          console.log("region.End: " + region.End);
+          console.log("regionName: " + regionName);
+          var activeRegionElement = document.getElementById("activeRegion");
+          activeRegionElement.innerHTML = regionName;
+          var color = +region.Color;
+          activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
+          break;
+        }
+      }      
       document.getElementById("response").innerHTML = JSON.stringify(response, null, 2);
       if (response.transport.playing == "1") {
         document.getElementById("position").innerHTML = "measure: " + response.transport.measure;
