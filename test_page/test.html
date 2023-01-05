@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Song Lyrics</title>
+  <style>
+    .highlight {
+      background-color: green;
+    }
+  </style>
+  <style>
+    #activeRegion {
+      font-size: 30px;
+      height: 40px;
+      background-color: lightblue;
+      width: 50%;
+    }
+  </style>
+  <style>
+    #previousRegionBanner {
+      font-size: 30px;
+      height: 40px;
+      background-color: lightgreen;
+      width: 50%;
+    }
+  </style>
+<div id="previousRegionBanner"></div>
+  
+</head>
+<body>
+  <div id="previousRegion"></div>
+  <div id="activeRegion"></div>
+  <div id="nextRegion"></div>
+  <div id="position"></div>
+  <h1>Song Lyrics</h1>
+  <table id="lyrics">
+  </table>
+  <button id="toggle-button" onclick="toggleResponse()">Show Response</button>
+  <pre id="response" style="display: none;"></pre>
+  <button id="update-button" onclick="toggleUpdates()">Stop Updates</button>
+  <script src="scripts/lyrics.js"></script>
+  <script>
+    // Start updates automatically when the page loads
+    toggleUpdates();
+  </script>
+</body>
+</html>

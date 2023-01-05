@@ -2,7 +2,9 @@ exports.parseTransportResponse = (responseBody) => {
   const strippedResponse = responseBody.replace(/\n/g, '');
   const values = strippedResponse.split('\t');
   const result = {
-    Position: values[4]
+    time: values[2],
+    measure: values[4],
+    playing: values[1]
   };
   return result;
 }
