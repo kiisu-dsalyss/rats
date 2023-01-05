@@ -124,7 +124,7 @@ function toggleUpdates() {
     updateInterval = null;
     document.getElementById("update-button").innerHTML = "Start Updates";
   } else {
-    updateInterval = setInterval(update, 300); // update every 50 milliseconds
+    updateInterval = setInterval(update, 200); // update every 50 milliseconds
     document.getElementById("update-button").innerHTML = "Stop Updates";
   }
 }

@@ -1,6 +1,5 @@
 exports.parseRegionResponse = (responseBody) => {
   const lines = responseBody.split('\n');
-  console.log(lines);
   const regions = [];
   let counter = 1;
   for (let i = 1; i < lines.length - 1; i++) {
