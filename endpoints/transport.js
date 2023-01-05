@@ -4,7 +4,7 @@ exports.parseTransportResponse = (responseBody) => {
   const result = {
     time: values[2],
     measure: values[4],
-    playing: values[3]
+    playing: values[1]
   };
   return result;
 }
