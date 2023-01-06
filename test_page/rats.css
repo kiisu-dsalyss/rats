@@ -1,0 +1,63 @@
+/* styles.css */
+body {
+  background-color: black;
+  color: white;
+  font-family: "IBM3270", sans-serif;
+}  
+.highlight {
+  background-color: green;
+}
+#nextRegion {
+  color: black;
+  font-size: 30px;
+  height: 40px;
+  width: 33%;  
+  background-color: grey;
+}
+#activeRegion {
+  color: black;
+  font-size: 40px;
+  height: 60px;
+  background-color: lightblue;
+  width: 50%;
+}
+#previousRegionBanner {
+  color: black;    
+  font-size: 30px;
+  height: 40px;
+  background-color: lightgreen;
+  width: 50%;
+}
+.banner-container {
+  display: flex;
+}
+#previousRegionBanner, #activeRegion, #nextRegion {
+  width: 33%;
+  text-align: center;
+}  
+table#lyrics {
+  border: 1px solid white;
+  width: 100%;
+}
+div#notes {
+  border: 1px solid white;
+  width: 100%;
+  font-size: 50px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;   
+}
+progress {
+  /* Set the width to 100% */
+  width: 100%;
+  /* Add some other styles to customize the appearance */
+}
+@font-face {
+  font-family: "IBM3270";
+  src: url("fonts/3270-Medium 500.ttf") format("truetype");
+}

@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Song Lyrics</title>
-  <style>
-    .highlight {
-      background-color: green;
-    }
-  </style>
-  <style>
-    #activeRegion {
-      font-size: 30px;
-      height: 40px;
-      background-color: lightblue;
-      width: 50%;
-    }
-  </style>
-  <style>
-    #previousRegionBanner {
-      font-size: 30px;
-      height: 40px;
-      background-color: lightgreen;
-      width: 50%;
-    }
-  </style>
-<div id="previousRegionBanner"></div>
-  
+  <title>RATS</title>
+<link rel="stylesheet" type="text/css" href="rats.css">
 </head>
 <body>
-  <div id="previousRegion"></div>
-  <div id="activeRegion"></div>
-  <div id="nextRegion"></div>
-  <div id="position"></div>
-  <h1>Song Lyrics</h1>
-  <table id="lyrics">
-  </table>
-  <button id="toggle-button" onclick="toggleResponse()">Show Response</button>
-  <pre id="response" style="display: none;"></pre>
-  <button id="update-button" onclick="toggleUpdates()">Stop Updates</button>
-  <script src="scripts/lyrics.js"></script>
-  <script>
-    // Start updates automatically when the page loads
-    toggleUpdates();
-  </script>
+  <!-- Wrap the banner elements in a container --> 
+  <progress id="progressBar" value="100" max="100"></progress>
+  <div class="banner-container">
+    <table style="width: 100%;">
+      <tr>
+        <th>Last</th>
+        <th id="activeHeader">Active</th>
+        <th>Next</th>
+      </tr>
+      <tr>
+        <td id="previousRegionBanner"></td>
+        <td id="activeRegion"></td>
+        <td id="nextRegion"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>  
+          <table id="lyrics">
+          </table></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><div id="measure"></div></td>
+        <td><div id="notes"></div></td>
+        <td></td>
+      </tr>  
+    </table>
+  </div>
+<button id="toggle-button" onclick="toggleResponse()">Show Response</button>
+<pre id="response" style="display: none;"></pre>
+<button id="update-button" onclick="toggleUpdates()">Stop Updates</button>
+<script src="scripts/lyrics.js"></script>
+<script>
+  // Start updates automatically when the page loads
+  toggleUpdates();
+</script>
+<script src="./scripts/colorCycler.js"></script>
 </body>
 </html>
