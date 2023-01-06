@@ -40,7 +40,7 @@ const handleSongRequest = (req, res) => {
   const trackId = req.query.track;
 
   // Set the expiration time for the cache (1 minute in this example)
-  const cacheExpiration = Date.now() + (0.5 * 60 * 1000);
+  const cacheExpiration = Date.now() + (1 * 60 * 1000);
 
   // Check the cache for saved responses from the lyrics and regions endpoints
   const lyricsResponse = cache[`lyrics${trackId}`];
