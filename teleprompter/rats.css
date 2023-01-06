@@ -27,7 +27,7 @@ body {
   color: black;    
   font-size: 20px;
   height: 40px;
-  background-color: lightgreen;
+  background-color: grey;
   width: 10%;
   text-align: center;
 }
@@ -60,4 +60,22 @@ progress {
 @font-face {
   font-family: "IBM3270";
   src: url("fonts/3270-Medium 500.ttf") format("truetype");
+}
+
+/* Style the chevron icon */
+#lyrics-chevron {
+  color: white;
+  background-color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Style the collapsed state of the lyrics element */
+#lyrics.collapsed {
+  display: none;
+}
+
+/* Style the collapsed state of the chevron icon */
+#lyrics-chevron.collapsed {
+  transform: rotate(90deg);
 }
