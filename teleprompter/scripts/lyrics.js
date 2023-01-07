@@ -225,6 +225,25 @@ function populateFourBars(position, lyrics) {
   }
 }
 
+function getDotElements() {
+  return {
+    1: document.getElementById('dot1'),
+    2: document.getElementById('dot2'),
+    3: document.getElementById('dot3'),
+    4: document.getElementById('dot4')
+  };
+}
+
+function getBarElements() {
+  return {
+    1: document.getElementById('bar1'),
+    2: document.getElementById('bar2'),
+    3: document.getElementById('bar3'),
+    4: document.getElementById('bar4')
+  };
+}
+
+
 function processResponse(response) {
   // Convert regions object to array and store in variable
   var regions = [];
@@ -235,18 +254,9 @@ function processResponse(response) {
   }
 
   // Cache DOM references
-  var dotElements = {
-    1: document.getElementById('dot1'),
-    2: document.getElementById('dot2'),
-    3: document.getElementById('dot3'),
-    4: document.getElementById('dot4')
-  };
-  var barElements = {
-    1: document.getElementById('bar1'),
-    2: document.getElementById('bar2'),
-    3: document.getElementById('bar3'),
-    4: document.getElementById('bar4')
-  };
+  var dotElements = getDotElements();
+  var barElements = getBarElements();
+
   var activeRegionElement = document.getElementById("activeRegion");
   var progressBarElement = document.getElementById("progressBar");
   var responseElement = document.getElementById("response");
