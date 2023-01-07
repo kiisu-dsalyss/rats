@@ -244,35 +244,52 @@ function getBarElements() {
 }
 
 
+function cacheElements() {
+  return {
+    dotElements: getDotElements(),
+    barElements: getBarElements(),
+    activeRegionElement: document.getElementById("activeRegion"),
+    progressBarElement: document.getElementById("progressBar"),
+    responseElement: document.getElementById("response"),
+    measureElement: document.getElementById("measure"),
+    lyricsElement: document.getElementById("lyrics"),
+    notesElement: document.getElementById("notes")
+  }
+}
+
 function processResponse(response) {
-  // Convert regions object to array and store in variable
+  // Convert regions object to array
   var regions = [];
-  for (var regionName in response.region) {
-    var region = response.region[regionName];
-    region.name = regionName;
-    regions.push(region);
+  for (const key in response.region) {
+    regions.push(response.region[key]);
   }
 
   // Cache DOM references
-  var dotElements = getDotElements();
-  var barElements = getBarElements();
-
-  var activeRegionElement = document.getElementById("activeRegion");
-  var progressBarElement = document.getElementById("progressBar");
-  var responseElement = document.getElementById("response");
-  var measureElement = document.getElementById("measure");
-  var lyricsElement = document.getElementById("lyrics");
-  var notesElement = document.getElementById("notes");
+  var elements = cacheElements();
+  var dotElements = elements.dotElements;
+  var barElements = elements.barElements;
+  var activeRegionElement = elements.activeRegionElement;
+  var progressBarElement = elements.progressBarElement;
+  var responseElement = elements.responseElement;
+  var measureElement = elements.measureElement;
+  var lyricsElement = elements.lyricsElement;
+  var notesElement = elements.notesElement;
 
   // Extract data from response and update DOM
   var dotProgress = getBarAndPercentage(response.transport.measure);
   dotElements[dotProgress.bar].value = 0;
-  var prevDot = dotProgress.bar -1;
-  if (prevDot === 0) { prevDot = 4 }
+  var prevDot;
+  switch (dotProgress.bar) {
+    case 1:
+      prevDot = 4;
+      break;
+    default:
+      prevDot = dotProgress.bar - 1;
+  }
   dotElements[prevDot].value = 100;
   populateFourBars(response.transport.measure, response.lyrics.Position);
-  barElements[dotProgress.bar].style.backgroundColor = "blue";
-  barElements[prevDot].style.backgroundColor = "black";       
+  barElements[dotProgress.bar].style.cssText = "background-color: blue";
+  barElements[prevDot].style.cssText = "background-color: black";
   for (var i = 0; i < regions.length; i++) {
     var region = regions[i];
     if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
