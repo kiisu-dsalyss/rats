@@ -107,7 +107,7 @@ function hue2rgb(m1, m2, h) {
   return m1;
 }
 
-function updateBanner(bannerElementId, regionName, regionColor, decimalToHex) {
+function updateBanner(bannerElementId, regionName, regionColor) {
   // Update the banner element
   var backColor = decimalToHex(regionColor);
   document.getElementById(bannerElementId).style.color = getComplimentaryColor(backColor);
@@ -317,6 +317,20 @@ function processResponse(response) {
   updateNextRegionBanner(response, decimalToHex);
 }
 
+function updateTrackFromQuery(xhttp) {
+  // Get the search parameters from the URL
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // Get the track parameter value
+  const track = searchParams.get("track");
+
+  // Update the track parameter in the xhttp.open call
+  if (track) {
+    const host = "http://localhost:3000";
+    const queryString = `track=${track}`;
+    xhttp.open("GET", `${host}/song?${queryString}`, true);
+  }
+}
 
 function update() {
   var xhttp = new XMLHttpRequest();
@@ -327,9 +341,8 @@ function update() {
       processResponse(response);
     }
   };
-  xhttp.open("GET", "http://localhost:3000/song?track=1", true);
+  updateTrackFromQuery(xhttp)
   xhttp.send();
-//   resetAllDots(100);  
 }
 
 
