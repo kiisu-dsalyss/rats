@@ -1,7 +1,8 @@
 var updateInterval = null;
 var lastMatch = null;
 
-function updateLyrics(position) {
+function updateLyrics(response) {
+  var position = response.transport.measure
   var lyrics = response.lyrics.Position;
   var lyricsTable = document.getElementById("lyrics");
 
@@ -216,21 +217,78 @@ function populateFourBars(position, lyrics) {
   var measure = parseInt(positionParts[0]);
   var next = measure + 1;
   var last = next + 1;
-  document.getElementById('bar' + 1).innerHTML = lyrics[measure + '.' +  1  + ".00"] || ".";
-  document.getElementById('bar' + 2).innerHTML = lyrics[measure + '.' +  2  + ".00"] || ".";
-  document.getElementById('bar' + 3).innerHTML = lyrics[measure + '.' +  3  + ".00"] || ".";
-  document.getElementById('bar' + 4).innerHTML = lyrics[measure + '.' +  4  + ".00"] || ".";
-  document.getElementById('nextbar' + 1).innerHTML = lyrics[next + '.' +  1  + ".00"] || ".";
-  document.getElementById('nextbar' + 2).innerHTML = lyrics[next + '.' +  2  + ".00"] || ".";
-  document.getElementById('nextbar' + 3).innerHTML = lyrics[next + '.' +  3  + ".00"] || ".";
-  document.getElementById('nextbar' + 4).innerHTML = lyrics[next + '.' +  4  + ".00"] || ".";
-  document.getElementById('lastbar' + 1).innerHTML = lyrics[last + '.' +  1  + ".00"] || ".";
-  document.getElementById('lastbar' + 2).innerHTML = lyrics[last + '.' +  2  + ".00"] || ".";
-  document.getElementById('lastbar' + 3).innerHTML = lyrics[last + '.' +  3  + ".00"] || ".";
-  document.getElementById('lastbar' + 4).innerHTML = lyrics[last + '.' +  4  + ".00"] || ".";    
+  
+  for (var i = 1; i <= 4; i++) {
+    document.getElementById('bar' + i).innerHTML = lyrics[measure + '.' +  i  + ".00"] || ".";
+    document.getElementById('nextbar' + i).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
+    document.getElementById('lastbar' + i).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
+  }
 }
 
+function processResponse(response) {
+  // Convert regions object to array and store in variable
+  var regions = [];
+  for (var regionName in response.region) {
+    var region = response.region[regionName];
+    region.name = regionName;
+    regions.push(region);
+  }
 
+  // Cache DOM references
+  var dotElements = {
+    1: document.getElementById('dot1'),
+    2: document.getElementById('dot2'),
+    3: document.getElementById('dot3'),
+    4: document.getElementById('dot4')
+  };
+  var barElements = {
+    1: document.getElementById('bar1'),
+    2: document.getElementById('bar2'),
+    3: document.getElementById('bar3'),
+    4: document.getElementById('bar4')
+  };
+  var activeRegionElement = document.getElementById("activeRegion");
+  var progressBarElement = document.getElementById("progressBar");
+  var responseElement = document.getElementById("response");
+  var measureElement = document.getElementById("measure");
+  var lyricsElement = document.getElementById("lyrics");
+  var notesElement = document.getElementById("notes");
+
+  // Extract data from response and update DOM
+  var dotProgress = getBarAndPercentage(response.transport.measure);
+  dotElements[dotProgress.bar].value = 0;
+  var prevDot = dotProgress.bar -1;
+  if (prevDot === 0) { prevDot = 4 }
+  dotElements[prevDot].value = 100;
+  populateFourBars(response.transport.measure, response.lyrics.Position);
+  barElements[dotProgress.bar].style.backgroundColor = "blue";
+  barElements[prevDot].style.backgroundColor = "black";       
+  for (var i = 0; i < regions.length; i++) {
+    var region = regions[i];
+    if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
+      activeRegionElement.innerHTML = region.name;
+      var color = +region.Color;
+      activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
+      break;
+    }
+  }
+  var progressPercent = calcPercentage(+region.Start, +region.End, +response.transport.time);
+  progressBarElement.value = progressPercent;
+  responseElement.innerHTML = JSON.stringify(response, null, 2);
+  if (response.transport.playing == "1") {
+    measureElement.innerHTML = "measure: " + response.transport.measure;
+    lyricsElement.innerHTML = "";
+    updateLyrics(response);        
+  } else {
+    notesElement.innerHTML = "";
+    lyricsElement.innerHTML = "";
+  }
+
+  // Call updatePreviousRegionBanner and updateCurrentRegionBanner
+  updatePreviousRegionBanner(response, decimalToHex);
+  updateCurrentRegionBanner(response, decimalToHex);
+  updateNextRegionBanner(response, decimalToHex);
+}
 
 
 function update() {
@@ -238,48 +296,15 @@ function update() {
   lastMatchedPosition = null;
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      response = JSON.parse(this.responseText);
-      var dotProgress = getBarAndPercentage(response.transport.measure);
-      document.getElementById('dot' + dotProgress.bar).value = 0;
-      var prevDot = dotProgress.bar -1;
-      if (prevDot === 0) { prevDot = 4 }
-      document.getElementById('dot' + prevDot).value = 100;
-      populateFourBars(response.transport.measure, response.lyrics.Position);
-      document.getElementById('bar' + dotProgress.bar).style.backgroundColor = "blue";
-      document.getElementById('bar' + prevDot).style.backgroundColor = "black";       
-      for (var regionName in response.region) {
-        var region = response.region[regionName];
-        if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
-          var activeRegionElement = document.getElementById("activeRegion");
-          activeRegionElement.innerHTML = regionName;
-          var color = +region.Color;
-          activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
-          break;
-        }
-      }
-      var progressPercent = calcPercentage(+region.Start, +region.End, +response.transport.time);
-      document.getElementById("progressBar").value = progressPercent;
-      document.getElementById("response").innerHTML = JSON.stringify(response, null, 2);
-      if (response.transport.playing == "1") {
-        document.getElementById("measure").innerHTML = "measure: " + response.transport.measure;
-        document.getElementById("lyrics").innerHTML = "";
-        updateLyrics(response.transport.measure);        
-      } else {
-        document.getElementById("notes").innerHTML = "";
-        document.getElementById("lyrics").innerHTML = "";
-      }
-
-      // Call updatePreviousRegionBanner and updateCurrentRegionBanner
-      updatePreviousRegionBanner(response, decimalToHex);
-      updateCurrentRegionBanner(response, decimalToHex);
-      updateNextRegionBanner(response, decimalToHex);
+      var response = JSON.parse(this.responseText);
+      processResponse(response);
     }
-    //TODO this will need to be based off of tempo
   };
   xhttp.open("GET", "http://localhost:3000/song?track=1", true);
   xhttp.send();
 //   resetAllDots(100);  
 }
+
 
 function toggleResponse() {
   var responseElement = document.getElementById("response");
