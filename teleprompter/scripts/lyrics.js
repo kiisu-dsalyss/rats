@@ -198,12 +198,55 @@ function calcPercentage(startTime, endTime, position) {
   return percentagePlayed;
 }
 
+function getBarAndPercentage(position) {
+  var positionParts = position.split(".");
+  var bar = parseInt(positionParts[1]);
+  var percentage = parseInt(positionParts[2]);
+  if (percentage > 1) {
+    percentage = 100;
+  }
+  return {
+    bar: bar,
+    percentage: percentage
+  };
+}
+
+function populateFourBars(position, lyrics) {
+  var positionParts = position.split(".");
+  var measure = parseInt(positionParts[0]);
+  var next = measure + 1;
+  var last = next + 1;
+  document.getElementById('bar' + 1).innerHTML = lyrics[measure + '.' +  1  + ".00"] || ".";
+  document.getElementById('bar' + 2).innerHTML = lyrics[measure + '.' +  2  + ".00"] || ".";
+  document.getElementById('bar' + 3).innerHTML = lyrics[measure + '.' +  3  + ".00"] || ".";
+  document.getElementById('bar' + 4).innerHTML = lyrics[measure + '.' +  4  + ".00"] || ".";
+  document.getElementById('nextbar' + 1).innerHTML = lyrics[next + '.' +  1  + ".00"] || ".";
+  document.getElementById('nextbar' + 2).innerHTML = lyrics[next + '.' +  2  + ".00"] || ".";
+  document.getElementById('nextbar' + 3).innerHTML = lyrics[next + '.' +  3  + ".00"] || ".";
+  document.getElementById('nextbar' + 4).innerHTML = lyrics[next + '.' +  4  + ".00"] || ".";
+  document.getElementById('lastbar' + 1).innerHTML = lyrics[last + '.' +  1  + ".00"] || ".";
+  document.getElementById('lastbar' + 2).innerHTML = lyrics[last + '.' +  2  + ".00"] || ".";
+  document.getElementById('lastbar' + 3).innerHTML = lyrics[last + '.' +  3  + ".00"] || ".";
+  document.getElementById('lastbar' + 4).innerHTML = lyrics[last + '.' +  4  + ".00"] || ".";    
+}
+
+
+
+
 function update() {
   var xhttp = new XMLHttpRequest();
   lastMatchedPosition = null;
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       response = JSON.parse(this.responseText);
+      var dotProgress = getBarAndPercentage(response.transport.measure);
+      document.getElementById('dot' + dotProgress.bar).value = 0;
+      var prevDot = dotProgress.bar -1;
+      if (prevDot === 0) { prevDot = 4 }
+      document.getElementById('dot' + prevDot).value = 100;
+      populateFourBars(response.transport.measure, response.lyrics.Position);
+      document.getElementById('bar' + dotProgress.bar).style.backgroundColor = "blue";
+      document.getElementById('bar' + prevDot).style.backgroundColor = "black";       
       for (var regionName in response.region) {
         var region = response.region[regionName];
         if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
@@ -213,10 +256,9 @@ function update() {
           activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
           break;
         }
-      } 
+      }
       var progressPercent = calcPercentage(+region.Start, +region.End, +response.transport.time);
       document.getElementById("progressBar").value = progressPercent;
-      console.log(decimalToHex(color));
       document.getElementById("response").innerHTML = JSON.stringify(response, null, 2);
       if (response.transport.playing == "1") {
         document.getElementById("measure").innerHTML = "measure: " + response.transport.measure;
@@ -232,9 +274,11 @@ function update() {
       updateCurrentRegionBanner(response, decimalToHex);
       updateNextRegionBanner(response, decimalToHex);
     }
+    //TODO this will need to be based off of tempo
   };
   xhttp.open("GET", "http://localhost:3000/song?track=1", true);
   xhttp.send();
+//   resetAllDots(100);  
 }
 
 function toggleResponse() {
