@@ -1,7 +1,8 @@
 var updateInterval = null;
 var lastMatch = null;
 
-function updateLyrics(position) {
+function updateLyrics(response) {
+  var position = response.transport.measure
   var lyrics = response.lyrics.Position;
   var lyricsTable = document.getElementById("lyrics");
 
@@ -106,7 +107,7 @@ function hue2rgb(m1, m2, h) {
   return m1;
 }
 
-function updateBanner(bannerElementId, regionName, regionColor, decimalToHex) {
+function updateBanner(bannerElementId, regionName, regionColor) {
   // Update the banner element
   var backColor = decimalToHex(regionColor);
   document.getElementById(bannerElementId).style.color = getComplimentaryColor(backColor);
@@ -216,70 +217,134 @@ function populateFourBars(position, lyrics) {
   var measure = parseInt(positionParts[0]);
   var next = measure + 1;
   var last = next + 1;
-  document.getElementById('bar' + 1).innerHTML = lyrics[measure + '.' +  1  + ".00"] || ".";
-  document.getElementById('bar' + 2).innerHTML = lyrics[measure + '.' +  2  + ".00"] || ".";
-  document.getElementById('bar' + 3).innerHTML = lyrics[measure + '.' +  3  + ".00"] || ".";
-  document.getElementById('bar' + 4).innerHTML = lyrics[measure + '.' +  4  + ".00"] || ".";
-  document.getElementById('nextbar' + 1).innerHTML = lyrics[next + '.' +  1  + ".00"] || ".";
-  document.getElementById('nextbar' + 2).innerHTML = lyrics[next + '.' +  2  + ".00"] || ".";
-  document.getElementById('nextbar' + 3).innerHTML = lyrics[next + '.' +  3  + ".00"] || ".";
-  document.getElementById('nextbar' + 4).innerHTML = lyrics[next + '.' +  4  + ".00"] || ".";
-  document.getElementById('lastbar' + 1).innerHTML = lyrics[last + '.' +  1  + ".00"] || ".";
-  document.getElementById('lastbar' + 2).innerHTML = lyrics[last + '.' +  2  + ".00"] || ".";
-  document.getElementById('lastbar' + 3).innerHTML = lyrics[last + '.' +  3  + ".00"] || ".";
-  document.getElementById('lastbar' + 4).innerHTML = lyrics[last + '.' +  4  + ".00"] || ".";    
+  
+  for (var i = 1; i <= 4; i++) {
+    document.getElementById('bar' + i).innerHTML = lyrics[measure + '.' +  i  + ".00"] || ".";
+    document.getElementById('nextbar' + i).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
+    document.getElementById('lastbar' + i).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
+  }
+}
+
+function getDotElements() {
+  return {
+    1: document.getElementById('dot1'),
+    2: document.getElementById('dot2'),
+    3: document.getElementById('dot3'),
+    4: document.getElementById('dot4')
+  };
+}
+
+function getBarElements() {
+  return {
+    1: document.getElementById('bar1'),
+    2: document.getElementById('bar2'),
+    3: document.getElementById('bar3'),
+    4: document.getElementById('bar4')
+  };
 }
 
 
+function cacheElements() {
+  return {
+    dotElements: getDotElements(),
+    barElements: getBarElements(),
+    activeRegionElement: document.getElementById("activeRegion"),
+    progressBarElement: document.getElementById("progressBar"),
+    responseElement: document.getElementById("response"),
+    measureElement: document.getElementById("measure"),
+    lyricsElement: document.getElementById("lyrics"),
+    notesElement: document.getElementById("notes")
+  }
+}
 
+function processResponse(response) {
+  // Convert regions object to array
+  var regions = [];
+  for (const key in response.region) {
+    regions.push(response.region[key]);
+  }
+
+  // Cache DOM references
+  var elements = cacheElements();
+  var dotElements = elements.dotElements;
+  var barElements = elements.barElements;
+  var activeRegionElement = elements.activeRegionElement;
+  var progressBarElement = elements.progressBarElement;
+  var responseElement = elements.responseElement;
+  var measureElement = elements.measureElement;
+  var lyricsElement = elements.lyricsElement;
+  var notesElement = elements.notesElement;
+
+  // Extract data from response and update DOM
+  var dotProgress = getBarAndPercentage(response.transport.measure);
+  dotElements[dotProgress.bar].value = 0;
+  var prevDot;
+  switch (dotProgress.bar) {
+    case 1:
+      prevDot = 4;
+      break;
+    default:
+      prevDot = dotProgress.bar - 1;
+  }
+  dotElements[prevDot].value = 100;
+  populateFourBars(response.transport.measure, response.lyrics.Position);
+  barElements[dotProgress.bar].style.cssText = "background-color: blue";
+  barElements[prevDot].style.cssText = "background-color: black";
+  for (var i = 0; i < regions.length; i++) {
+    var region = regions[i];
+    if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
+      activeRegionElement.innerHTML = region.name;
+      var color = +region.Color;
+      activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
+      break;
+    }
+  }
+  var progressPercent = calcPercentage(+region.Start, +region.End, +response.transport.time);
+  progressBarElement.value = progressPercent;
+  responseElement.innerHTML = JSON.stringify(response, null, 2);
+  if (response.transport.playing == "1") {
+    measureElement.innerHTML = "measure: " + response.transport.measure;
+    lyricsElement.innerHTML = "";
+    updateLyrics(response);        
+  } else {
+    notesElement.innerHTML = "";
+    lyricsElement.innerHTML = "";
+  }
+
+  // Call updatePreviousRegionBanner and updateCurrentRegionBanner
+  updatePreviousRegionBanner(response, decimalToHex);
+  updateCurrentRegionBanner(response, decimalToHex);
+  updateNextRegionBanner(response, decimalToHex);
+}
+
+function updateTrackFromQuery(xhttp) {
+  // Get the search parameters from the URL
+  const searchParams = new URLSearchParams(window.location.search);
+
+  // Get the track parameter value
+  const track = searchParams.get("track");
+
+  // Update the track parameter in the xhttp.open call
+  if (track) {
+    const host = "http://localhost:3000";
+    const queryString = `track=${track}`;
+    xhttp.open("GET", `${host}/song?${queryString}`, true);
+  }
+}
 
 function update() {
   var xhttp = new XMLHttpRequest();
   lastMatchedPosition = null;
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      response = JSON.parse(this.responseText);
-      var dotProgress = getBarAndPercentage(response.transport.measure);
-      document.getElementById('dot' + dotProgress.bar).value = 0;
-      var prevDot = dotProgress.bar -1;
-      if (prevDot === 0) { prevDot = 4 }
-      document.getElementById('dot' + prevDot).value = 100;
-      populateFourBars(response.transport.measure, response.lyrics.Position);
-      document.getElementById('bar' + dotProgress.bar).style.backgroundColor = "blue";
-      document.getElementById('bar' + prevDot).style.backgroundColor = "black";       
-      for (var regionName in response.region) {
-        var region = response.region[regionName];
-        if (+response.transport.time >= +region.Start && +response.transport.time < +region.End) {
-          var activeRegionElement = document.getElementById("activeRegion");
-          activeRegionElement.innerHTML = regionName;
-          var color = +region.Color;
-          activeRegionElement.style.backgroundColor = "#" + decimalToHex(color);
-          break;
-        }
-      }
-      var progressPercent = calcPercentage(+region.Start, +region.End, +response.transport.time);
-      document.getElementById("progressBar").value = progressPercent;
-      document.getElementById("response").innerHTML = JSON.stringify(response, null, 2);
-      if (response.transport.playing == "1") {
-        document.getElementById("measure").innerHTML = "measure: " + response.transport.measure;
-        document.getElementById("lyrics").innerHTML = "";
-        updateLyrics(response.transport.measure);        
-      } else {
-        document.getElementById("notes").innerHTML = "";
-        document.getElementById("lyrics").innerHTML = "";
-      }
-
-      // Call updatePreviousRegionBanner and updateCurrentRegionBanner
-      updatePreviousRegionBanner(response, decimalToHex);
-      updateCurrentRegionBanner(response, decimalToHex);
-      updateNextRegionBanner(response, decimalToHex);
+      var response = JSON.parse(this.responseText);
+      processResponse(response);
     }
-    //TODO this will need to be based off of tempo
   };
-  xhttp.open("GET", "http://localhost:3000/song?track=1", true);
+  updateTrackFromQuery(xhttp)
   xhttp.send();
-//   resetAllDots(100);  
 }
+
 
 function toggleResponse() {
   var responseElement = document.getElementById("response");
