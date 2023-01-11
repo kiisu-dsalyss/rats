@@ -1,0 +1,73 @@
+@font-face {
+    font-family: "LCARS";
+    src: url("../fonts/LCARS.ttf") format("truetype");
+}
+body {
+    font-family: "LCARS";
+    background-color: black;
+    color: white;
+    font-size: 30px;  
+}
+#progressBar {
+  /* Set the width to 100% */
+  width: 100%;
+  /* Add some other styles to customize the appearance */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th {
+    text-align: center;
+}
+#activeHeader) {
+    background-color: white;
+    color: black;
+}
+td {
+    text-align: center;
+}
+tr {
+    text-align: center;
+}
+#previousRegion {
+    font-size: 35px;
+    background-color: gray;
+}
+#activeRegion {
+    background-color: lightblue;
+    font-size: 80px;
+}
+#nextRegion {
+    font-size: 35px;
+    background-color: gray;
+}
+#measure {
+  text-align: center;
+}
+#lyrics {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border: 1px solid white;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;   
+}
+.lyricBar{
+  display: inline-block;
+  width: 5%;
+  margin: 0 10px; 
+  display: inline-block;
+  width: 25%;
+  font-size: 70px;
+  margin: 0 10px;  
+}
+.noteBar{
+  font-size: 100px
+}

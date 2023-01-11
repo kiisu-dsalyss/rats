@@ -1,9 +1,12 @@
+const osc = require('osc');
 const config = require('./secrets/config');
 const express = require('express');
 const lyrics = require('./endpoints/lyrics');
 const request = require('request');
 const region = require('./endpoints/region');
 const transport = require('./endpoints/transport');
+
+let oscTransport = {};
 
 const app = express();
 let baseUrl = config.baseUrl;
@@ -21,6 +24,7 @@ const handleRequest = (endpoint, parseResponse) => {
       } else {
         const parsedResponse = parseResponse(body);
         res.json(parsedResponse);
+        res.end();
       }
     });
   };
@@ -36,12 +40,22 @@ const combineEndpointResponses = (transportResponse, regionResponse, lyricsRespo
 
 const cache = {};
 
-const handleSongRequest = (req, res) => {
-  const trackId = req.query.track;
+let numRequests = 0;
+let startTime = process.hrtime();
 
+const handleSongRequest = (req, res) => {
+  // Inside your request handling function
+  numRequests += 1;
+  // Calculate the elapsed time since the startTime
+  const elapsedTime = process.hrtime(startTime);
+  // Calculate the number of seconds that have elapsed
+  const elapsedSeconds = elapsedTime[0] + elapsedTime[1] / 1e9;
+  // Calculate the number of requests per second
+  const requestsPerSecond = numRequests / elapsedSeconds;
+//   console.log(`Number of requests per second: ${requestsPerSecond}\r`);
+  const trackId = req.query.track;
   // Set the expiration time for the cache (1 minute in this example)
   const cacheExpiration = Date.now() + (0.5 * 60 * 1000);
-
   // Check the cache for saved responses from the lyrics and regions endpoints
   const lyricsResponse = cache[`lyrics${trackId}`];
   const regionResponse = cache[`regions`];
@@ -56,12 +70,13 @@ const handleSongRequest = (req, res) => {
         if (error) {
           reject(error);
         } else {
+          let lyricsData = lyrics.parseLyricsResponse(body);
           // Update the cache with the new response
           cache[`lyrics${trackId}`] = {
             timestamp: cacheExpiration,
-            data: lyrics.parseLyricsResponse(body),
+            data: lyricsData,
           };
-          resolve(lyrics.parseLyricsResponse(body));
+          resolve(lyricsData);
         }
       });
     });
@@ -76,12 +91,13 @@ const handleSongRequest = (req, res) => {
         if (error) {
           reject(error);
         } else {
+          let regionData = region.parseRegionResponse(body);
           // Update the cache with the new response
           cache[`regions`] = {
             timestamp: cacheExpiration,
-            data: region.parseRegionResponse(body),
+            data: regionData,
           };
-          resolve(region.parseRegionResponse(body));
+          resolve(regionData);
         }
       });
     });
@@ -93,7 +109,7 @@ const handleSongRequest = (req, res) => {
       if (error) {
         reject(error);
       } else {
-        resolve(transport.parseTransportResponse(body));
+        resolve(oscTransport);
       }
     });
   });
@@ -116,10 +132,43 @@ app.use((req, res, next) => {
 });
 
 app.get('/song', handleSongRequest);
-app.get('/transport', handleRequest(transport.endpoint, transport.parseTransportResponse));
+app.get('/transport', (req, res) => {
+  res.send(oscTransport)
+})
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
 
 app.listen(config.port, () => {
   console.log(`Reaper API Teleprompter Service (RATS) listening on port ${config.port}`);
 });
+
+function startOSC() {
+  // Set up an OSC server to listen for messages on port 9000
+  const udpPort = new osc.UDPPort({
+    localAddress: "127.0.0.1",
+    localPort: 9000
+  });
+  const desiredAddresses = ["/beat/str", "/time"];
+  oscTransport = {
+    measure: null,
+    time: null
+  };
+  udpPort.on("message", function (oscMessage) {
+//     console.log(oscMessage);
+    if (desiredAddresses.includes(oscMessage.address)) {
+      if(oscMessage.address === "/beat/str"){
+        oscTransport.measure = oscMessage.args[0];
+      } else if(oscMessage.address === "/time"){
+        oscTransport.time = oscMessage.args[0];
+      }
+    }
+  });
+  udpPort.on("ready", function () {
+    console.log("OSC server is listening for messages on port 9000");
+  });
+  udpPort.open();
+}
+
+
+
+startOSC();
