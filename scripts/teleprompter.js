@@ -214,18 +214,11 @@ function populateFourBars(lyrics) {
   var last = next + 1;
   for (var i = 1; i <= 4; i++) {
     var bar = document.getElementById(`bar${i}`);
-    bar.innerHTML = lyrics[position + '.' +  i  + ".00"] || ".";
+    var lyric = (lyrics[position + '.' +  i  + ".00"]) || '.';
+    bar.innerHTML = lyric || ".";
     document.getElementById(`nextbar${i}`).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
     document.getElementById(`lastbar${i}`).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
     let lastNote = note.innerHTML;
-    for (var i = 1; i <= 4; i++) {
-      var bar = document.getElementById(`bar${i}`);
-      bar.innerHTML = lyrics[position + '.' +  i  + ".00"] 
-      if (i === beat && lyrics[position + '.' +  i  + ".00"]) {
-        note.innerHTML = lyrics[position + '.' +  i  + ".00"];
-        lastNote = note.innerHTML;
-      }
-    }
     if(!lyrics[position + '.' +  beat  + ".00"]){
       note.innerHTML = lastNote;
     }
