@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="stylesheets/client.css">
+</head>
+<script src="./scripts/teleprompter.js"></script>     
+<body onload="update()">
+  <progress id="progressBar" value="0" max="100"></progress>
+    <table>
+        <tr>
+            <th style="width: 10%">Last</th>
+            <th id="activeHeader">00.0.00</th>
+            <th style="width: 10%">Next</th>
+        </tr>
+        <tr>
+            <td id="previousRegion"></td>
+            <td id="activeRegion">-OFFLINE-</td>
+            <td id="nextRegion"></td>
+        </tr>
+        <tr>
+          <td id=lyricRows colspan=4>
+            <div id="lyrics">
+              <div class="lyricBar" id= "bar1">.</div>
+              <div class="lyricBar" id= "bar2">.</div>
+              <div class="lyricBar" id= "bar3">.</div>
+              <div class="lyricBar" id= "bar4">.</div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td id=lyricRows colspan=4>
+            <div id="lyrics">
+              <div class="lyricBar" id= "nextbar1">.</div>
+              <div class="lyricBar" id= "nextbar2">.</div>
+              <div class="lyricBar" id= "nextbar3">.</div>
+              <div class="lyricBar" id= "nextbar4">.</div>
+            </div>
+          </td>
+        </tr>  
+        <tr>
+          <td id=lyricRows colspan=4>
+            <div id="lyrics">
+              <div class="lyricBar" id= "lastbar1">.</div>
+              <div class="lyricBar" id= "lastbar2">.</div>
+              <div class="lyricBar" id= "lastbar3">.</div>
+              <div class="lyricBar" id= "lastbar4">.</div>
+            </div>
+          </td>
+        </tr>          
+        <tr>
+          <td colspan=4>
+            <div id="note" class="noteBar">...</div>
+          </td>
+        </tr>        
+    </table>
+    <script src="./scripts/colorCycler.js"></script>
+</body>
+</html>

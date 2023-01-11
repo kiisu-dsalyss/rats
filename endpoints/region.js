@@ -19,7 +19,7 @@ exports.parseRegionResponse = (responseBody) => {
     }
   }
   regions.sort((a, b) => a.start - b.start);
-  return regions.reduce((result, region) => {
+  const result = regions.reduce((result, region) => {
     if (region.name !== '-') {
       result[region.name] = {
         Start: region.start,
@@ -29,6 +29,9 @@ exports.parseRegionResponse = (responseBody) => {
     }
     return result;
   }, {});
+  return result;
 }
+
+
 
 exports.endpoint = '/_/REGION';
