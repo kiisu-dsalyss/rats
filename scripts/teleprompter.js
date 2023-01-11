@@ -212,30 +212,25 @@ function populateFourBars(lyrics) {
   var beat = parseInt(positionParts[1]);
   var next = position + 1;
   var last = next + 1;
-  for (var i = 1; i <= 4; i++) {
+  let lastNote = note.innerHTML;
+  for (let i = 1; i <= 4; i++) {
     var bar = document.getElementById(`bar${i}`);
     bar.innerHTML = lyrics[position + '.' +  i  + ".00"] || ".";
     document.getElementById(`nextbar${i}`).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
     document.getElementById(`lastbar${i}`).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
-    let lastNote = note.innerHTML;
-    for (var i = 1; i <= 4; i++) {
-      var bar = document.getElementById(`bar${i}`);
-      bar.innerHTML = lyrics[position + '.' +  i  + ".00"] 
-      if (i === beat && lyrics[position + '.' +  i  + ".00"]) {
-        note.innerHTML = lyrics[position + '.' +  i  + ".00"];
-        lastNote = note.innerHTML;
-      }
-    }
-    if(!lyrics[position + '.' +  beat  + ".00"]){
-      note.innerHTML = lastNote;
-    }
     if (i === beat) {
         bar.style.backgroundColor = "blue";
+        if(lyrics[position + '.' +  i  + ".00"]) {
+            note.innerHTML = lyrics[position + '.' +  i  + ".00"];
+        } else {
+            note.innerHTML = lastNote;
+        }
     } else {
         bar.style.backgroundColor = "";
     }
   }
 }
+
 
 
 function checkLyrics() {

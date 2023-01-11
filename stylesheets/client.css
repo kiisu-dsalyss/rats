@@ -37,7 +37,7 @@ tr {
 }
 #activeRegion {
     background-color: lightblue;
-    font-size: 50px;
+    font-size: 30px;
     width: 80%;
 }
 #nextRegion {
@@ -67,9 +67,9 @@ tr {
   margin: 0 10px; 
   display: inline-block;
   width: 25%;
-  font-size: 40px;
+  font-size: 30px;
   margin: 0 10px;  
 }
 .noteBar{
-  font-size: 50px
+  font-size: 40px
 }
