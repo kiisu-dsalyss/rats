@@ -1,4 +1,4 @@
-const host = 'http://10.0.0.148';
+const host = 'http://localhost';
 const port = '3000';
 var measure;
 var time;
@@ -230,8 +230,6 @@ function populateFourBars(lyrics) {
       }
   }
 }
-
-
 
 function checkLyrics() {
   if (!song || !song.region) return;
