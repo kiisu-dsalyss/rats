@@ -23,6 +23,10 @@ th {
 #activeHeader) {
     background-color: white;
     color: black;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;      
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;           
 }
 td {
     text-align: center;
@@ -33,14 +37,19 @@ tr {
 #previousRegion {
     font-size: 25px;
     background-color: gray;
+    width: 100px;
+    border-top-left-radius: 25px;    
 }
 #activeRegion {
     background-color: lightblue;
     font-size: 50px;
+    height: 110px;
 }
 #nextRegion {
     font-size: 25px;
     background-color: gray;
+    width: 100px;
+    border-top-right-radius: 25px;    
 }
 #measure {
   text-align: center;
@@ -66,8 +75,17 @@ tr {
   display: inline-block;
   width: 25%;
   font-size: 30px;
-  margin: 0 10px;  
+  margin: 0 10px;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;      
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;  
+}
+#note{
+  height: 100px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;    
 }
 .noteBar{
-  font-size: 50px
+  font-size: 80px
 }

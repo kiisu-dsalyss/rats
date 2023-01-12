@@ -9,7 +9,7 @@
     <table>
         <tr>
             <th style="width: 10%">Last</th>
-            <th id="activeHeader">00.0.00</th>
+            <th><div id="activeHeader">00.0.00</div></th>
             <th style="width: 10%">Next</th>
         </tr>
         <tr>
@@ -54,5 +54,8 @@
         </tr>        
     </table>
     <script src="./scripts/colorCycler.js"></script>
+    <script>
+        setTimeout(cycleColors(document.getElementById('note')), 100);
+    </script>
 </body>
 </html>

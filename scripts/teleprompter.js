@@ -1,4 +1,4 @@
-const host = 'http://localhost';
+const host = 'http://10.0.0.148';
 const port = '3000';
 var measure;
 var time;
@@ -206,29 +206,31 @@ function populateFourBars(lyrics) {
   const bar3 = document.getElementById('bar3');
   const bar4 = document.getElementById('bar4');
   const note = document.getElementById('note');
-
+  let lastNote = ".";  
   var positionParts = `${measure}`.split(".");
   var position = parseInt(positionParts[0]);
   var beat = parseInt(positionParts[1]);
   var next = position + 1;
   var last = next + 1;
   for (var i = 1; i <= 4; i++) {
-    var bar = document.getElementById(`bar${i}`);
-    var lyric = (lyrics[position + '.' +  i  + ".00"]) || '.';
-    bar.innerHTML = lyric || ".";
-    document.getElementById(`nextbar${i}`).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
-    document.getElementById(`lastbar${i}`).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
-    let lastNote = note.innerHTML;
-    if(!lyrics[position + '.' +  beat  + ".00"]){
-      note.innerHTML = lastNote;
-    }
-    if (i === beat) {
-        bar.style.backgroundColor = "blue";
-    } else {
-        bar.style.backgroundColor = "";
-    }
+      var bar = document.getElementById(`bar${i}`);
+      var lyric = (lyrics[position + '.' +  i  + ".00"]) || '.';
+      bar.innerHTML = lyric || ".";
+      document.getElementById(`nextbar${i}`).innerHTML = lyrics[next + '.' +  i  + ".00"] || ".";
+      document.getElementById(`lastbar${i}`).innerHTML = lyrics[last + '.' +  i  + ".00"] || ".";
+
+      if (i === beat) {
+          bar.style.backgroundColor = "blue";
+          if(lyric !== '.') {
+              lastNote = lyric; // only assign a non '.' value 
+              note.innerHTML = lastNote;
+          }
+      } else {
+          bar.style.backgroundColor = "";
+      }
   }
 }
+
 
 
 function checkLyrics() {
@@ -253,6 +255,6 @@ function updateSong() {
 
 function update() {
   updateSong();
-  setInterval(updateMeasure, 30);
+  setInterval(updateMeasure, 20);
   setInterval(updateSong, 200);
 }
