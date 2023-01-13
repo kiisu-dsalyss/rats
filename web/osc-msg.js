@@ -96,6 +96,7 @@ var lyrics = {};
           regions = data;
         })
         .catch(error => console.error(error));
+      rats.checkActive;
     };   
     
     rats.calcPercentage = function (startTime, endTime, position) {
@@ -186,6 +187,28 @@ var lyrics = {};
       // Update the previous region banner element
       rats.updateBanner("previousRegion", previousRegionName, previousRegionColor);
     }
+    
+    rats.checkActive = function() {
+        // Find the index of the current region
+        var currentRegionIndex = -1;
+        for (var regionName in regions) {
+            currentRegionIndex++;
+            var region = regions[regionName];
+            if (+rats.timePosition >= +region.Start && +rats.timePosition < +region.End) {
+                break;
+            }
+        }
+        // Get the next region
+        var thisRegionName = null;
+        var thisRegionColor = null;
+        var regionNames = Object.keys(regions);
+        if (currentRegionIndex < regionNames.length - 1) {
+            thisRegionName = regionNames[currentRegionIndex];
+            thisRegionColor = regions[thisRegionName].Color;
+        }
+        // Update the next region banner element
+        rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
+    }    
     
     rats.updateNext = function() {
         // Find the index of the current region
