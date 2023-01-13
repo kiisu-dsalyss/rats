@@ -1,0 +1,9 @@
+{
+    "name": "rats-osc.js-web-app",
+    "version": "0.0.1",
+    "main": "osc-msg.js",
+    "ignore": [],
+    "dependencies": {
+        "osc": "2.4.2"
+    }
+}

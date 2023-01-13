@@ -29,6 +29,7 @@ exports.parseRegionResponse = (responseBody) => {
     }
     return result;
   }, {});
+//   console.log(result);
   return result;
 }
 
