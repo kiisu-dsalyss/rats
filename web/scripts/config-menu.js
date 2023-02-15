@@ -3,38 +3,22 @@ const songInfoTable = document.getElementById('songInfo');
 const configMenu = document.getElementById('configMenu');
 const serverUrl = 'http://localhost:8081';
 
-// Set a variable to hold the timeout ID
-let timeoutId;
+// Add event listener for the "dblclick" event on the document
+document.addEventListener('dblclick', async (event) => {
+  // Fetch the configuration data from the API
+  const response = await fetch(`${serverUrl}/config`);
+  const data = await response.json();
 
-// Add event listener for the "click" event on the document
-document.addEventListener('click', (event) => {
-  // Set a timeout for 3 seconds to show the config menu
-  timeoutId = setTimeout(async () => {
-    // Fetch the configuration data from the API
-    const response = await fetch(`${serverUrl}/config`);
-    const data = await response.json();
-    // Populate the form fields with the configuration data
-    document.getElementById('baseUrl').value = data.baseUrl;
-    document.getElementById('rcvport').value = data.rcvport;
-    document.getElementById('ip').value = data.ip;
-    document.getElementById('clientport').value = data.clientport;
-    document.querySelector(`input[name="defaultTrack"][value="${data.defaultTrack}"]`).checked = true;
-    configMenu.style.display = 'block';
-    songInfoTable.style.display = 'none'; // Hide the songInfo table
-  }, 3000);
-});
+  // Populate the form fields with the configuration data
+  document.getElementById('baseUrl').value = data.baseUrl;
+  document.getElementById('rcvport').value = data.rcvport;
+  document.getElementById('ip').value = data.ip;
+  document.getElementById('clientport').value = data.clientport;
+  document.querySelector(`input[name="defaultTrack"][value="${data.defaultTrack}"]`).checked = true;
 
-// Add event listener for the "mouseup" event on the document
-document.addEventListener('mouseup', (event) => {
-  // If the mouse button is released before 3 seconds, cancel the timeout
-  clearTimeout(timeoutId);
-  if (timeoutId) {
-    configMenu.style.display = 'block'; // Show the config menu
-    songInfoTable.style.display = 'none'; // Hide the songInfo table
-  } else {
-    configMenu.style.display = 'none'; // Hide the config menu
-    songInfoTable.style.display = 'table'; // Show the songInfo table
-  }
+  // Show the config menu and hide the songInfo table
+  configMenu.style.display = 'block';
+  songInfoTable.style.display = 'none';
 });
 
 // Get a reference to the save button element
@@ -56,5 +40,5 @@ saveButton.addEventListener('click', async () => {
     body: JSON.stringify({ baseUrl, rcvport, ip, clientport, defaultTrack })
   });
 
-  location.reload()
+  location.reload();
 });
