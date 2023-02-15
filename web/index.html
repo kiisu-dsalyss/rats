@@ -8,7 +8,7 @@
     </head>
     <body>
       <progress id="progressBar" value="0" max="100"></progress>
-      <table>
+      <table id=songInfo>
           <tr>
               <th style="width: 10%">Last</th>
               <th><div id="activeHeader">00.0.00</div></th>
@@ -55,9 +55,26 @@
             </td>
           </tr>        
       </table>
+    <div id="configMenu" style="display: none;">
+      <div class="config-form">
+        <label for="ipAddress">IP Address:</label>
+        <input type="text" id="ip"><br>
+        <label for="base-url">Base URL:</label>
+        <input type="text" id="baseUrl"><br>
+        <label for="rcv-port">Receive Port:</label>
+        <input type="text" id="rcvport"><br>
+        <label for="client-port">Client Port:</label>
+        <input type="text" id="clientport"><br>
+        <label for="default-track">Default Track:</label>
+        <input type="text" id="defaultTrack"><br>        
+
+        <button type="button" id="save-button">Save</button>
+      </div>    
+    </div>      
     <script src="./scripts/colorCycler.js"></script>
+    <script src="./scripts/config-menu.js"></script>    
     <script>
-      setTimeout(cycleColors(document.getElementById('note')), 100);
+      setTimeout(function() { cycleColors(document.getElementById('note'));}, 100);
       var oscMsg = new rats.oscMsg(); 
       rats.update();       
     </script>      
