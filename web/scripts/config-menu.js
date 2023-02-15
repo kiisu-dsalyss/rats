@@ -18,7 +18,7 @@ document.addEventListener('click', (event) => {
     document.getElementById('rcvport').value = data.rcvport;
     document.getElementById('ip').value = data.ip;
     document.getElementById('clientport').value = data.clientport;
-    document.getElementById('defaultTrack').value = data.defaultTrack;
+    document.querySelector(`input[name="defaultTrack"][value="${data.defaultTrack}"]`).checked = true;
     configMenu.style.display = 'block';
     songInfoTable.style.display = 'none'; // Hide the songInfo table
   }, 3000);
@@ -47,7 +47,7 @@ saveButton.addEventListener('click', async () => {
   const rcvport = document.getElementById('rcvport').value;
   const ip = document.getElementById('ip').value;
   const clientport = document.getElementById('clientport').value;
-  const defaultTrack = document.getElementById('defaultTrack').value;
+  const defaultTrack = document.querySelector('input[name="defaultTrack"]:checked').value;
 
   // Send a POST request to the server with the updated configuration data
   const response = await fetch(`${serverUrl}/config`, {

@@ -97,7 +97,15 @@ app.put('/config', (req, res) => {
       res.status(200).json({ message: 'Configuration file updated successfully' });
     }
   });
+
+  // Update the config variable with the new configuration data
+  config.ip = newConfig.ip;
+  config.baseUrl = newConfig.baseUrl;
+  config.rcvport = newConfig.rcvport;
+  config.clientport = newConfig.clientport;
+  config.defaultTrack = newConfig.defaultTrack;
 });
+
 
 app.listen(config.port, () => {
 });

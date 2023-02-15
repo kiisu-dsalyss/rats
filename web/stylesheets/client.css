@@ -91,3 +91,53 @@ tr {
 .noteBar{
   font-size: 80px
 }
+#configMenu {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.config-form {
+  display: table;
+  margin: 10px;
+}
+
+.config-form label {
+  display: table-row;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.config-form input[type="text"] {
+  width: 330px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+.radio-buttons {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.radio-buttons label {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.radio-buttons input[type="radio"] {
+  margin-right: 5px;
+}
+
+#save-button {
+  padding: 5px 10px;
+  width: 340px;  
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: auto;
+}
