@@ -91,6 +91,7 @@ tr {
 .noteBar{
   font-size: 80px
 }
+
 #configMenu {
   position: fixed;
   top: 40%;
@@ -116,18 +117,23 @@ tr {
 
 .radio-buttons {
   display: flex;
-  align-items: center;
   flex-direction: row;
   font-size: 30px;
 }
 
 .radio-buttons label {
   width: 105px;
+  height: 50px;
   font-size: 30px;
   background-color: hotpink;
 }
 
-.radio-buttons input[type="radio"] {
+input[type="radio"]:checked + label {
+  background-color: lightblue;
+}
+
+.radio-buttons input[type="radio"]:checked + label {
+  background-color: lightblue;
 }
 
 #save-button {
@@ -141,4 +147,3 @@ tr {
   cursor: pointer;
   margin-top: 0px;
 }
-
