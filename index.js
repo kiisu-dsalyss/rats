@@ -1,8 +1,10 @@
+const express = require('express');
+const bodyParser = require('body-parser');
 const config = require('./secrets/config');
 const lyrics = require('./endpoints/lyrics');
 const request = require('request');
 const region = require('./endpoints/region');
-const express = require('express');
+const fs = require('fs');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -39,6 +41,8 @@ var appResources = __dirname + "/web",
         server: server
     });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // allow requests from any domain
@@ -51,7 +55,7 @@ app.use("/", express.static(appResources, {}));
 const handleRequest = (endpoint, parseResponse) => (req, res) => {
   const trackId = req.query.track || '';
   const fullUrl = baseUrl + endpoint + trackId;
-  console.log(`Request to: ${fullUrl}`);
+//   console.log(`Request to: ${fullUrl}`);
   request(fullUrl, (error, response, body) => {
     if (error) {
       res.status(500).json({ error: 'Error accessing URL' });
@@ -65,6 +69,43 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
+// Set up a route to serve the config data as JSON
+app.get('/config', (req, res) => {
+  res.json(config);
+});
+// Update config
+app.put('/config', (req, res) => {
+  const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
+
+  // Validate the input here
+
+  const newConfig = {
+    ip,
+    baseUrl,
+    rcvport,
+    clientport,
+    defaultTrack
+  };
+  console.log(newConfig);
+
+  // Write the new configuration data to the config.js file
+  fs.writeFile('./secrets/config.js', `module.exports = ${JSON.stringify(newConfig)}`, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Error updating configuration file' });
+    } else {
+      res.status(200).json({ message: 'Configuration file updated successfully' });
+    }
+  });
+
+  // Update the config variable with the new configuration data
+  config.ip = newConfig.ip;
+  config.baseUrl = newConfig.baseUrl;
+  config.rcvport = newConfig.rcvport;
+  config.clientport = newConfig.clientport;
+  config.defaultTrack = newConfig.defaultTrack;
+});
+
 
 app.listen(config.port, () => {
 });

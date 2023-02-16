@@ -124,19 +124,22 @@ var lyrics = {};
       document.getElementById("progressBar").value = progressPercent;  
     }    
     
-    rats.getLyrics = function () {
+    rats.getLyrics = async function () {
       let host = new URL(`http://localhost:8081/lyrics`);
       const searchParams = new URLSearchParams(window.location.search);
-      const track = searchParams.get("track");
-      const queryString = `track=${track}`;  
-      let url = new URL(`${host}?${queryString}`);      
+      const trackNumber = await rats.getDefaultTrack();
+      console.log(trackNumber);
+      const track = searchParams.get("track") || trackNumber;
+      const queryString = `track=${track}`;
+      let url = new URL(`${host}?${queryString}`);
       fetch(url)
         .then(response => response.json())
         .then(data => {
             lyrics = data;
         })
         .catch(error => console.error(error));
-    }     
+    };
+
 
     rats.parseOSCMessage = function (msg) {
 //       console.log(msg.address);
@@ -292,4 +295,15 @@ var lyrics = {};
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      
     };
+
+    rats.getDefaultTrack = function () {
+      let url = new URL(`http://localhost:8081/config`);
+      return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            return data.defaultTrack;
+        })
+        .catch(error => console.error(error));
+    };
+    
 }());
