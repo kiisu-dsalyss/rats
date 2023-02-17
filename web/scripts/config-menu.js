@@ -63,7 +63,7 @@ keyboard.addEventListener('click', function(event) {
   } else {
     setTimeout(function() {
       keyboard.style.display = 'flex';
-    }, 1);
+    }, 100);
   }
 });
 
