@@ -58,10 +58,13 @@ keyboard.addEventListener('click', function(event) {
     lastInput.value += value;
   }
   console.log('You clicked the ' + value + ' key!');
-  keyboard.style.display = 'none';
-  setTimeout(function() {
-    keyboard.style.display = 'flex';
-  }, 1);
+  if (value === '↵') {
+    keyboard.style.display = 'none';
+  } else {
+    setTimeout(function() {
+      keyboard.style.display = 'flex';
+    }, 1);
+  }
 });
 
 var inputs = document.querySelectorAll('input[type="text"]');

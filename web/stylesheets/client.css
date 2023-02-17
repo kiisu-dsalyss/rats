@@ -184,7 +184,7 @@ input[type="radio"]:checked + label {
 }
 
 .key {
-  width: calc(25% - 10px);
+  width: calc(25% - 30px);
   height: 30px;
   margin: 5px;
   font-size: 18px;
@@ -197,17 +197,17 @@ input[type="radio"]:checked + label {
 
 .key:last-child {
   width: 30%;
-  height: 50px;
+  height: 30px; /* or any other value you want */
   margin: 5px;
   font-size: 20px;
   background-color: white;
   text-align: center;
   border-radius: 5px;
-  line-height: 50px;
   cursor: pointer;
   background-color: black;
   color: white;
 }
+
 
 .key:hover {
   background-color: lightblue;
@@ -218,4 +218,5 @@ input[type="radio"]:checked + label {
   grid-row: 4 / span 1;
   background-color: black;
   color: white;
+  line-height: 30px;
 }
