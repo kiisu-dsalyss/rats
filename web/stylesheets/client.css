@@ -100,15 +100,22 @@ tr {
 }
 
 #configMenu {
+  margin-top: 10px;
   position: fixed;
+  justify-content: center;
+  align-items: center;  
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+#configTrack {
+  border-top-left-radius: 25px;
+  padding-left: 15px;
+}
 .config-form {
   display: table;
-  width: 400px;
+  width: 600px;
 }
 
 .config-form label {
@@ -122,6 +129,10 @@ tr {
   font-size: 20px;
 }
 
+#rightHeader {
+  border-top-right-radius: 25px;    
+}
+
 .radio-buttons {
   display: flex;
   flex-direction: row;
@@ -129,12 +140,17 @@ tr {
 }
 
 .radio-buttons label {
+  padding-top: 20px;
   width: 105px;
   height: 50px;
   font-size: 30px;
   background-color: hotpink;
 }
 
+#configsInputs {
+  padding: 10px;
+  background: blue;
+}
 input[type="radio"]:checked + label {
   background-color: lightblue;
 }
@@ -153,4 +169,53 @@ input[type="radio"]:checked + label {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 0px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;      
+}
+
+#virtualKeyboard {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 95%;
+  padding: 10px;
+  border-radius: 25px;
+  margin: 0 auto;
+}
+
+.key {
+  width: calc(25% - 10px);
+  height: 30px;
+  margin: 5px;
+  font-size: 18px;
+  background-color: black;
+  text-align: center;
+  border-radius: 5px;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.key:last-child {
+  width: 30%;
+  height: 50px;
+  margin: 5px;
+  font-size: 20px;
+  background-color: white;
+  text-align: center;
+  border-radius: 5px;
+  line-height: 50px;
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.key:hover {
+  background-color: lightblue;
+}
+
+#enter {
+  grid-column: 3 / span 1;
+  grid-row: 4 / span 1;
+  background-color: black;
+  color: white;
 }

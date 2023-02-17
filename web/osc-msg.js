@@ -128,7 +128,6 @@ var lyrics = {};
       let host = new URL(`http://localhost:8081/lyrics`);
       const searchParams = new URLSearchParams(window.location.search);
       const trackNumber = await rats.getDefaultTrack();
-      console.log(trackNumber);
       const track = searchParams.get("track") || trackNumber;
       const queryString = `track=${track}`;
       let url = new URL(`${host}?${queryString}`);
