@@ -184,7 +184,7 @@ input[type="radio"]:checked + label {
 }
 
 .key {
-  width: calc(25% - 30px);
+  width: calc(25% - 10px);
   height: 30px;
   margin: 5px;
   font-size: 18px;
