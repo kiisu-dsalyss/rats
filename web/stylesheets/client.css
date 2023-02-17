@@ -84,7 +84,9 @@ tr {
   background-clip: padding-box;  
 }
 #note{
-  height: 100px;
+  height: 30vh;
+  justify-content: center;
+  align-items: center;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;    
 }
