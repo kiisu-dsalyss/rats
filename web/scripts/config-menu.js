@@ -42,3 +42,36 @@ saveButton.addEventListener('click', async () => {
 
   location.reload();
 });
+
+// Keyboard for configMenu
+var keyboard = document.getElementById('virtualKeyboard');
+var lastInput = null;
+
+keyboard.addEventListener('click', function(event) {
+  var key = event.target;
+  var value = key.innerText;
+  if (value === '←') {
+    lastInput.value = lastInput.value.slice(0, -1);
+  } else if (value === '↵') {
+    lastInput.value += '\n';
+  } else {
+    lastInput.value += value;
+  }
+  console.log('You clicked the ' + value + ' key!');
+  if (value === '↵') {
+    keyboard.style.display = 'none';
+  } else {
+    setTimeout(function() {
+      keyboard.style.display = 'flex';
+    }, 1);
+  }
+});
+
+var inputs = document.querySelectorAll('input[type="text"]');
+
+for (var i = 0; i < inputs.length; i++) {
+  inputs[i].addEventListener('click', function() {
+    lastInput = this;
+    keyboard.style.display = 'flex';
+  });
+}

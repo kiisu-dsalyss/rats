@@ -58,32 +58,63 @@
     <div id="configMenu" style="display: none;">
     <div class="config-form">
       <div class="radio-buttons">
+        <label id="configTrack">Track: </label>
         <label for="defaultTrack1">
           <input type="radio" name="defaultTrack" id="defaultTrack1" value="1">
-          Track 1
+          1
         </label>
         <label for="defaultTrack2">
           <input type="radio" name="defaultTrack" id="defaultTrack2" value="2">
-          Track 2
+          2
         </label>
         <label for="defaultTrack3">
           <input type="radio" name="defaultTrack" id="defaultTrack3" value="3">
-          Track 3
+          3
         </label>
         <label for="defaultTrack4">
           <input type="radio" name="defaultTrack" id="defaultTrack4" value="4">
-          Track 4
+          4
         </label>
+        <label id="rightHeader"></label>        
       </div>
-      <label for="ip">IP Address:</label>
-      <input type="text" id="ip"><br>
-      <label for="baseUrl">Base URL:</label>
-      <input type="text" id="baseUrl"><br>
-      <label for="rcvport">Receive Port:</label>
-      <input type="text" id="rcvport"><br>
-      <label for="clientport">Client Port:</label>
-      <input type="text" id="clientport"><br>
-      <button type="button" id="save-button">Save</button>
+      <div id="configsInputs">
+        <table>
+          <tr>
+            <td><label for="ip">OSC Receive IP:</label></td>
+            <td><input type="text" id="ip"></td>
+          </tr>
+          <tr>
+            <td><label for="rcvport">OSC Receive Port:</label></td>
+            <td><input type="text" id="rcvport"></td>
+          </tr>          
+          <tr>
+            <td><label for="baseUrl">Host Base URL:</label></td>
+            <td><input type="text" id="baseUrl"></td>
+          </tr>
+          <tr>
+            <td><label for="clientport">Local Client Port:</label></td>
+            <td><input type="text" id="clientport"></td>
+          </tr>
+        </table>
+        <div id="virtualKeyboard">
+          <div class="key" data-value="1">1</div>
+          <div class="key" data-value="2">2</div>
+          <div class="key" data-value="3">3</div>
+          <div class="key" data-value="4">4</div>
+          <div class="key" data-value="5">5</div>
+          <div class="key" data-value="6">6</div>
+          <div class="key" data-value="7">7</div>
+          <div class="key" data-value="8">8</div>
+          <div class="key" data-value="9">9</div>
+          <div class="key" data-value=".">.</div>
+          <div class="key" data-value="0">0</div>
+          <div class="key" data-value="http://">http://</div>
+          <div class="key" data-value=":">:</div>
+          <div class="key" data-value="backspace">&larr;</div>
+          <div class="key" data-value="enter">&#8629;</div>
+        </div>
+      </div>    
+      <button type="button" id="save-button">Save</button>    
     </div>
     </div>
     <script src="./scripts/colorCycler.js"></script>
