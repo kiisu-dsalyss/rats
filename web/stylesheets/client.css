@@ -1,58 +1,69 @@
 @font-face {
-    font-family: "LCARS";
-    src: url("../fonts/LCARS.ttf") format("truetype");
+  font-family: "LCARS";
+  src: url("../fonts/LCARS.ttf") format("truetype");
 }
+
 body {
-    font-family: "LCARS";
-    background-color: black;
-    color: white;
-    font-size: 25px;  
+  font-family: "LCARS";
+  background-color: black;
+  color: white;
+  font-size: 25px;  
 }
+
 #progressBar {
   /* Set the width to 100% */
   width: 100%;
   /* Add some other styles to customize the appearance */
 }
+
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
+
 th {
-    font-family: Tahoma, sans-serif;
-    font-size: 16px;
-    text-align: center;
+  font-family: Tahoma, sans-serif;
+  font-size: 16px;
+  text-align: center;
 }
-#activeHeader) {
-    background-color: white;
-    color: black;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;      
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;           
+
+#activeHeader {
+  background-color: white;
+  color: black;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;      
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;           
 }
+
 td {
-    text-align: center;
+  text-align: center;
 }
+
 tr {
-    text-align: center;
+  text-align: center;
 }
+
 #previousRegion {
-    font-size: 25px;
-    background-color: gray;
-    width: 100px;
-    border-top-left-radius: 25px;    
+  font-size: 25px;
+  background-color: gray;
+  width: 100px;
+  border-top-left-radius: 25px;    
 }
+
 #activeRegion {
-    background-color: lightblue;
-    font-size: 50px;
-    height: 110px;
+  background-color: lightblue;
+  font-size: 50px;
+  height: 110px;
 }
+
 #nextRegion {
-    font-size: 25px;
-    background-color: gray;
-    width: 100px;
-    border-top-right-radius: 25px;    
+  font-size: 25px;
+  background-color: gray;
+  width: 100px;
+  border-top-right-radius: 25px;    
 }
+
 #measure {
   text-align: center;
 }
@@ -76,6 +87,7 @@ tr {
   white-space: -o-pre-wrap;
   word-wrap: break-word;   
 }
+
 .lyricBar{
   display: inline-block;
   width: 5%;
@@ -88,15 +100,17 @@ tr {
   -webkit-background-clip: padding-box;
   background-clip: padding-box;  
 }
-#note{
+
+#note {
   height: 15vh;
   justify-content: center;
   align-items: center;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;    
 }
-.noteBar{
-  font-size: 80px
+
+.noteBar {
+  font-size: 80px;
 }
 
 #configMenu {
@@ -113,6 +127,7 @@ tr {
   border-top-left-radius: 25px;
   padding-left: 15px;
 }
+
 .config-form {
   display: table;
   width: 600px;
@@ -151,6 +166,7 @@ tr {
   padding: 10px;
   background: blue;
 }
+
 input[type="radio"]:checked + label {
   background-color: lightblue;
 }
@@ -159,9 +175,14 @@ input[type="radio"]:checked + label {
   background-color: lightblue;
 }
 
+#bottomConfig {
+  display: flex;
+  justify-content: space-between;
+}
+
 #save-button {
   padding: 10px;
-  width: calc(100%);
+  width: calc(50%);
   font-size: 30px;
   background-color: lightblue;
   color: white;
@@ -169,8 +190,25 @@ input[type="radio"]:checked + label {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 0px;
+  border-bottom-right-radius: 25px; 
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;     
+    
+}
+
+#cancel-button {
+  padding: 10px;
+  width: calc(50%);
+  font-size: 30px;
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0px;
   border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;      
+  border-top-right-radius: 0; 
+  border-bottom-right-radius: 0;       
 }
 
 #virtualKeyboard {

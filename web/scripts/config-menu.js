@@ -3,8 +3,8 @@ const songInfoTable = document.getElementById('songInfo');
 const configMenu = document.getElementById('configMenu');
 const serverUrl = 'http://localhost:8081';
 
-// Add event listener for the "dblclick" event on the document
-document.addEventListener('dblclick', async (event) => {
+// Define the event listener function for the double click event
+const eventListener = async (event) => {
   // Fetch the configuration data from the API
   const response = await fetch(`${serverUrl}/config`);
   const data = await response.json();
@@ -19,7 +19,13 @@ document.addEventListener('dblclick', async (event) => {
   // Show the config menu and hide the songInfo table
   configMenu.style.display = 'block';
   songInfoTable.style.display = 'none';
-});
+
+  // Remove the dblclick event listener from the document
+  document.removeEventListener('dblclick', eventListener);
+};
+
+// Add event listener for the "dblclick" event on the document
+document.addEventListener('dblclick', eventListener);
 
 // Get a reference to the save button element
 const saveButton = document.getElementById('save-button');
@@ -33,7 +39,7 @@ saveButton.addEventListener('click', async () => {
   const clientport = document.getElementById('clientport').value;
   const defaultTrack = document.querySelector('input[name="defaultTrack"]:checked').value;
 
-  // Send a POST request to the server with the updated configuration data
+  // Send a PUT request to the server with the updated configuration data
   const response = await fetch(`${serverUrl}/config`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -41,6 +47,26 @@ saveButton.addEventListener('click', async () => {
   });
 
   location.reload();
+});
+
+// Add a click event listener to the cancel button
+const cancelButton = document.getElementById('cancel-button');
+cancelButton.addEventListener('click', () => {
+  // Hide the config menu and show the songInfo table
+  configMenu.style.display = 'none';
+  songInfoTable.style.display = 'table';
+
+  // Add back the dblclick event listener to the document
+  document.addEventListener('dblclick', eventListener);
+});
+// Add a click event listener to the cancel button
+cancelButton.addEventListener('click', () => {
+  // Hide the config menu and show the songInfo table
+  configMenu.style.display = 'none';
+  songInfoTable.style.display = 'table';
+
+  // Add back the dblclick event listener to the document
+  document.addEventListener('dblclick', eventListener);
 });
 
 // Keyboard for configMenu
