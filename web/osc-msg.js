@@ -8,16 +8,19 @@ var lyrics = {};
     
 
     rats.oscMsg = function () {
-        this.oscPort = new osc.WebSocketPort({
-            url: "ws://localhost:8081"
-        });
+      const currentURL = window.location.href;        
+      const parts = currentURL.split('/');
+      const ipAddress = parts[2];  
+      this.oscPort = new osc.WebSocketPort({
+          url: `ws://${ipAddress}`
+      });
 
-        this.listen();
-        this.oscPort.open();
+      this.listen();
+      this.oscPort.open();
 
-        this.oscPort.socket.onmessage = function (e) {
-        console.log("message", e);    
-        };
+      this.oscPort.socket.onmessage = function (e) {
+      console.log("message", e);    
+      };
 
     };
     
@@ -89,7 +92,8 @@ var lyrics = {};
     };  
 
     rats.getRegions = function () {
-      let url = new URL(`http://localhost:8081/region`);
+      const currentURL = window.location.href;
+      let url = new URL(`${currentURL}region`);
       fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -125,7 +129,8 @@ var lyrics = {};
     }    
     
     rats.getLyrics = async function () {
-      let host = new URL(`http://localhost:8081/lyrics`);
+      const currentURL = window.location.href;    
+      let host = new URL(`${currentURL}lyrics`);
       const searchParams = new URLSearchParams(window.location.search);
       const trackNumber = await rats.getDefaultTrack();
       const track = searchParams.get("track") || trackNumber;
@@ -141,7 +146,6 @@ var lyrics = {};
 
 
     rats.parseOSCMessage = function (msg) {
-//       console.log(msg.address);
       if (msg.address === "/beat/str") {
         rats.beatPosition = (msg.args[0]);        
         rats.updateBeat();
@@ -296,7 +300,8 @@ var lyrics = {};
     };
 
     rats.getDefaultTrack = function () {
-      let url = new URL(`http://localhost:8081/config`);
+      const currentURL = window.location.href;        
+      let url = new URL(`${currentURL}config`);
       return fetch(url)
         .then(response => response.json())
         .then(data => {
