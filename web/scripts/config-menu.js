@@ -1,12 +1,12 @@
 // Get references to the songInfo table and the config menu element
 const songInfoTable = document.getElementById('songInfo');
 const configMenu = document.getElementById('configMenu');
-const serverUrl = 'http://localhost:8081';
+const serverUrl = window.location.href;
 
 // Define the event listener function for the double click event
 const eventListener = async (event) => {
   // Fetch the configuration data from the API
-  const response = await fetch(`${serverUrl}/config`);
+  const response = await fetch(`${serverUrl}config`);
   const data = await response.json();
 
   // Populate the form fields with the configuration data
@@ -40,7 +40,7 @@ saveButton.addEventListener('click', async () => {
   const defaultTrack = document.querySelector('input[name="defaultTrack"]:checked').value;
 
   // Send a PUT request to the server with the updated configuration data
-  const response = await fetch(`${serverUrl}/config`, {
+  const response = await fetch(`${serverUrl}config`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ baseUrl, rcvport, ip, clientport, defaultTrack })

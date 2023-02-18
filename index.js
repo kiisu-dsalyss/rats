@@ -55,7 +55,6 @@ app.use("/", express.static(appResources, {}));
 const handleRequest = (endpoint, parseResponse) => (req, res) => {
   const trackId = req.query.track || '';
   const fullUrl = baseUrl + endpoint + trackId;
-//   console.log(`Request to: ${fullUrl}`);
   request(fullUrl, (error, response, body) => {
     if (error) {
       res.status(500).json({ error: 'Error accessing URL' });
