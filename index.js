@@ -6,6 +6,12 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
+const wifi = require('node-wifi');
+
+// Call the init function to initialize the node-wifi module
+wifi.init({
+  iface: null // Use the default network interface
+});
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -93,6 +99,24 @@ app.get('/ip', (req, res) => {
     res.json({ ip: ipAddress });
   } else {
     res.status(500).json({ error: 'Unable to determine IP address' });
+  }
+});
+
+// Set up a route to connect to a WiFi network
+app.post('/wifi', async (req, res) => {
+  const { ssid, password } = req.body;
+
+  try {
+    // Connect to the WiFi network
+    await wifi.connect({ ssid, password });
+
+    // Send a success response
+    res.status(200).json({ message: `Connected to ${ssid}` });
+  } catch (error) {
+    console.error(error);
+
+    // Send an error response
+    res.status(500).json({ error: `Error connecting to ${ssid}` });
   }
 });
 
