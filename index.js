@@ -6,7 +6,8 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
-const wifi = require('rpi-wifi-connection');
+const Wifi = require('rpi-wifi-connection');
+const wifi = new Wifi();
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -103,14 +104,14 @@ app.post('/wifi', async (req, res) => {
 
   try {
     // Connect to the WiFi network
-    await wifi.connect({ ssid, password });
+    await wifi.connectToAP(ssid, password);
 
     // Send a success response
     res.status(200).json({ message: `Connected to ${ssid}` });
   } catch (error) {
     console.error(error);
 
-    // Send an error response with the error message
+    // Send an error response
     res.status(500).json({ error: error.message });
   }
 });
