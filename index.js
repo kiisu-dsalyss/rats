@@ -6,12 +6,7 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
-const wifi = require('rpi-wifi');
-
-// Call the init function to initialize the node-wifi module
-wifi.init({
-  iface: null // Use the default network interface
-});
+const wifi = require('rpi-wifi-connection');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
