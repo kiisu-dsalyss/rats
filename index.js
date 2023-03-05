@@ -6,7 +6,7 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
-const wifi = require('node-wifi');
+const wifi = require('rpi-wifi-connection');
 
 // Call the init function to initialize the node-wifi module
 wifi.init({
@@ -108,7 +108,7 @@ app.post('/wifi', async (req, res) => {
 
   try {
     // Connect to the WiFi network
-    await wifi.connect({ ssid, password });
+    await wifi.connectToAP(ssid, password);
 
     // Send a success response
     res.status(200).json({ message: `Connected to ${ssid}` });
