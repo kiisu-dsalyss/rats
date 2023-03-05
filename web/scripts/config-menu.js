@@ -3,6 +3,22 @@ const songInfoTable = document.getElementById('songInfo');
 const configMenu = document.getElementById('configMenu');
 const serverUrl = window.location.href;
 
+const ipAddress = document.createElement('p');
+configMenu.appendChild(ipAddress);
+
+const updateIpAddress = async () => {
+  try {
+    const response = await fetch(`${serverUrl}ip`);
+    const data = await response.json();
+    ipAddress.textContent = `Device IP Address: ${data.ip}`;
+  } catch (error) {
+    console.error(error);
+    ipAddress.textContent = 'Unable to determine IP address';
+  }
+};
+
+updateIpAddress();
+
 // Define the event listener function for the double click event
 const eventListener = async (event) => {
   // Fetch the configuration data from the API
