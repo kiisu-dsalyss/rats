@@ -24,6 +24,8 @@ const eventListener = async (event) => {
   // Fetch the configuration data from the API
   const response = await fetch(`${serverUrl}config`);
   const data = await response.json();
+  // Pull fresh IP address when menu opens
+  updateIpAddress();
 
   // Populate the form fields with the configuration data
   document.getElementById('baseUrl').value = data.baseUrl;
