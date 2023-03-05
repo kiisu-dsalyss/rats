@@ -17,14 +17,12 @@ const updateIpAddress = async () => {
   }
 };
 
-updateIpAddress();
-
 // Define the event listener function for the double click event
 const eventListener = async (event) => {
   // Fetch the configuration data from the API
   const response = await fetch(`${serverUrl}config`);
   const data = await response.json();
-
+  updateIpAddress();
   // Populate the form fields with the configuration data
   document.getElementById('baseUrl').value = data.baseUrl;
   document.getElementById('rcvport').value = data.rcvport;
