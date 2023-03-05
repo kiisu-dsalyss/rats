@@ -5,6 +5,7 @@ const lyrics = require('./endpoints/lyrics');
 const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
+const os = require('os');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -72,6 +73,29 @@ app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
 app.get('/config', (req, res) => {
   res.json(config);
 });
+// Get the local IP address of the device
+app.get('/ip', (req, res) => {
+  const networkInterfaces = os.networkInterfaces();
+  let ipAddress = '';
+  for (const interfaceName of Object.keys(networkInterfaces)) {
+    const networkInterface = networkInterfaces[interfaceName];
+    for (const networkAddress of networkInterface) {
+      if (networkAddress.family === 'IPv4' && !networkAddress.internal) {
+        ipAddress = networkAddress.address;
+        break;
+      }
+    }
+    if (ipAddress) {
+      break;
+    }
+  }
+  if (ipAddress) {
+    res.json({ ip: ipAddress });
+  } else {
+    res.status(500).json({ error: 'Unable to determine IP address' });
+  }
+});
+
 // Update config
 app.put('/config', (req, res) => {
   const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
