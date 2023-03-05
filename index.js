@@ -103,15 +103,15 @@ app.post('/wifi', async (req, res) => {
 
   try {
     // Connect to the WiFi network
-    await wifi.connect({ ssid, psk: password });
+    await wifi.connect({ ssid, password });
 
     // Send a success response
     res.status(200).json({ message: `Connected to ${ssid}` });
   } catch (error) {
     console.error(error);
 
-    // Send an error response
-    res.status(500).json({ error: `Error connecting to ${ssid}` });
+    // Send an error response with the error message
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -134,7 +134,8 @@ app.put('/config', (req, res) => {
   fs.writeFile('./secrets/config.js', `module.exports = ${JSON.stringify(newConfig)}`, (err) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'Error updating configuration file' });
+      res.status(500).json({ error: 'Error updating configuration file',
+       });
     } else {
       res.status(200).json({ message: 'Configuration file updated successfully' });
     }
