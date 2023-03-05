@@ -104,7 +104,7 @@ app.post('/wifi', async (req, res) => {
 
   try {
     // Connect to the WiFi network
-    await wifi.connectToAP(ssid, password);
+    await wifi.connect({ ssid, psk: password });
 
     // Send a success response
     res.status(200).json({ message: `Connected to ${ssid}` });
@@ -112,7 +112,7 @@ app.post('/wifi', async (req, res) => {
     console.error(error);
 
     // Send an error response
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: `Error connecting to ${ssid}` });
   }
 });
 
