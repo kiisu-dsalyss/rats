@@ -116,6 +116,18 @@ app.post('/wifi', async (req, res) => {
   }
 });
 
+// Endpoint to get a list of available WiFi networks
+app.get('/wifi/scan', async (req, res) => {
+  try {
+    const networks = await wifi.scan();
+    res.status(200).json({ networks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to scan for available WiFi networks.' });
+  }
+});
+
+
 // Update config
 app.put('/config', (req, res) => {
   const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
