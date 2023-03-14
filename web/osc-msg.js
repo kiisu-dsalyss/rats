@@ -167,24 +167,35 @@ var lyrics = {};
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
         url.searchParams.append('color', regionColor);
-        url.searchParams.append('fadeTime', 1000);
+        url.searchParams.append('fadeTime', 100);
 
         fetch(url)
           .then(response => response.json())
           .catch(error => console.error(error));
+
+        // Wait for the fadePixels timeout to finish before executing seqPixels
+        setTimeout(() => {
+          let url = new URL(`${currentURL}seqPixels`);
+          url.searchParams.append('color', '0000FF');
+          url.searchParams.append('fadeTime', 500);
+          url.searchParams.append('direction', 'forward');
+
+          fetch(url)
+            .then(response => response.json())
+            .catch(error => console.error(error));
+        }, 100); // Wait for 100ms (the fadeTime of fadePixels)
       }
     };
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
+      const currentURL = window.location.href;
       // Update the banner element
       var backColor = (rats.decimalToHex(+regionColor));
       var color = rats.getComplimentaryColor(backColor);
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
-
       // Call the ledFadeActive function
-      const currentURL = window.location.href;
       rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
