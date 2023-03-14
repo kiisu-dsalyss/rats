@@ -71,20 +71,29 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
   });
 };
 
-app.get('/fadePixels', (req, res) => {
+app.get('/fadePixels', async (req, res) => {
   const color = req.query.color || 'blue';
   const fadeTime = req.query.fadeTime || 1000;
-  fadePixels(color, fadeTime);
-  res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds` });
+  try {
+    const output = await fadePixels(color, fadeTime);
+    res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds`, output });
+  } catch (error) {
+    res.status(500).json({ message: 'Error running fadePixels', error });
+  }
 });
 
-app.get('/seqPixels', (req, res) => {
+app.get('/seqPixels', async (req, res) => {
   const color = req.query.color || 'red';
   const fadeTime = req.query.fadeTime || 500;
   const direction = req.query.direction || 'forward';
-  seqPixels(color, fadeTime, direction);
-  res.status(200).json({ message: `Sequencing pixels in ${color} with fade time of ${fadeTime} milliseconds and ${direction} direction` });
+  try {
+    const output = await seqPixels(color, fadeTime, direction);
+    res.status(200).json({ message: `Sequencing pixels in ${color} with fade time of ${fadeTime} milliseconds and ${direction} direction`, output });
+  } catch (error) {
+    res.status(500).json({ message: 'Error running seqPixels', error });
+  }
 });
+
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 

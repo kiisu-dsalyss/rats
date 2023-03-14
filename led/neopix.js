@@ -1,39 +1,55 @@
 const { spawn } = require('child_process');
 
 function fadePixels(color, fadeTime) {
-  const scriptPath = './fadepixel.py';
-  const holdtime = 30;
+  return new Promise((resolve, reject) => {
+    const scriptPath = './fadepixel.py';
+    const holdtime = 30;
+    let stdout = '';
+    let stderr = '';
 
-  const pythonProcess = spawn('sudo', ['python3', scriptPath, color, holdtime, '--fade', fadeTime]);
+    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, holdtime, '--fade', fadeTime]);
 
-  pythonProcess.stdout.on('data', (data) => {
-    // do something with the output if needed
-  });
+    pythonProcess.stdout.on('data', (data) => {
+      stdout += data;
+    });
 
-  pythonProcess.stderr.on('data', (data) => {
-    // do something with the error output if needed
-  });
+    pythonProcess.stderr.on('data', (data) => {
+      stderr += data;
+    });
 
-  pythonProcess.on('close', (code) => {
-    // do something when the process is done if needed
+    pythonProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject({ code, stderr });
+      }
+    });
   });
 }
 
 function seqPixels(color, fadeTime, direction) {
-  const scriptPath = './seqpixel.py';
+  return new Promise((resolve, reject) => {
+    const scriptPath = './seqpixel.py';
+    let stdout = '';
+    let stderr = '';
 
-  const pythonProcess = spawn('sudo', ['python3', scriptPath, color, fadeTime, '--direction', direction]);
+    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, fadeTime, '--direction', direction]);
 
-  pythonProcess.stdout.on('data', (data) => {
-    // do something with the output if needed
-  });
+    pythonProcess.stdout.on('data', (data) => {
+      stdout += data;
+    });
 
-  pythonProcess.stderr.on('data', (data) => {
-    // do something with the error output if needed
-  });
+    pythonProcess.stderr.on('data', (data) => {
+      stderr += data;
+    });
 
-  pythonProcess.on('close', (code) => {
-    // do something when the process is done if needed
+    pythonProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject({ code, stderr });
+      }
+    });
   });
 }
 
