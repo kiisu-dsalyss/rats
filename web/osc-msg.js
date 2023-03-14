@@ -198,18 +198,12 @@ var lyrics = {};
         fetch(url)
           .then(response => response.json())
           .then(() => {
-            // Perform any other actions on the LEDs after the fadePixels is completed
+            rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
           })
           .catch(error => console.error(error));
-      } else {
-          if (seqPixelsTimeout === null) { // check if timeout is null
-            seqPixelsTimeout = setTimeout(() => { // set timeout
-              rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
-              seqPixelsTimeout = null; // reset timeout
-            }, fadeTime * 2);
-        }
       }
     };
+
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
       const currentURL = window.location.href;
