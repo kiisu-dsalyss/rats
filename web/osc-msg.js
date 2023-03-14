@@ -172,8 +172,8 @@ var lyrics = {};
       document.getElementById(bannerElementId).style.color = color;
 
       // Call the fadePixels API to change the LED color only if bannerElementId is equal to activeRegion
-      if (bannerElementId === activeRegion) {
-        const fadeTime = 1000; // Adjust fadeTime as needed
+      if (bannerElementId === 'activeRegion') {
+        const fadeTime = 30; // Adjust fadeTime as needed
         const currentURL = window.location.href;
         let url = new URL(`${currentURL}fadePixels?color=${backColor}&fadeTime=${fadeTime}`);
         fetch(url)
