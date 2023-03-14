@@ -198,7 +198,7 @@ var lyrics = {};
         fetch(url)
           .then(response => response.json())
           .then(() => {
-            for (let i = 0; i < 3; i++) {
+            while (rats.progressBar <= 90) {
               rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
             }
           })
