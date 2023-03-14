@@ -199,7 +199,7 @@ var lyrics = {};
           .then(response => response.json())
           .then(() => {
             for (let i = 0; i < 6; i++) {
-              rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
+              rats.runSeqPixels(currentURL, regionColor, (fadeTime * 2), 'forward');
             }
           })
           .catch(error => console.error(error));
