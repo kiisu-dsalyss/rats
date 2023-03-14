@@ -198,7 +198,9 @@ var lyrics = {};
         fetch(url)
           .then(response => response.json())
           .then(() => {
-            rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
+            for (let i = 0; i < 3; i++) {
+              rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
+            }
           })
           .catch(error => console.error(error));
       }
