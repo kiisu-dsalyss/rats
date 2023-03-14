@@ -163,8 +163,20 @@ var lyrics = {};
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
+    function runSeqPixels(currentURL, color, fadeTime, direction) {
+      let url = new URL(`${currentURL}seqPixels`);
+      url.searchParams.append('color', color);
+      url.searchParams.append('fadeTime', fadeTime);
+      url.searchParams.append('direction', direction);
+
+      return fetch(url)
+        .then(response => response.json())
+        .catch(error => console.error(error));
+    }
+
     rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
       const fadeTime = 50;
+
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
         url.searchParams.append('color', regionColor);
@@ -172,21 +184,15 @@ var lyrics = {};
 
         fetch(url)
           .then(response => response.json())
+          .then(() => {
+            // Perform any other actions on the LEDs after the fadePixels is completed
+          })
           .catch(error => console.error(error));
-
-        // Wait for the fadePixels timeout to finish before executing seqPixels
-        setTimeout(() => {
-          let url = new URL(`${currentURL}seqPixels`);
-          url.searchParams.append('color', '0000FF');
-          url.searchParams.append('fadeTime', fadeTime);
-          url.searchParams.append('direction', 'forward');
-
-          fetch(url)
-            .then(response => response.json())
-            .catch(error => console.error(error));
-        }, fadeTime); // Wait for 100ms (the fadeTime of fadePixels)
+      } else {
+        runSeqPixels(currentURL, '0000FF', fadeTime, 'forward');
       }
     };
+
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
       const currentURL = window.location.href;
