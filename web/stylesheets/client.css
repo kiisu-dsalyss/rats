@@ -102,7 +102,7 @@ tr {
 }
 
 #note {
-  height: 15vh;
+  height: 14vh;
   justify-content: center;
   align-items: center;
   border-bottom-left-radius: 25px;
@@ -110,7 +110,7 @@ tr {
 }
 
 .noteBar {
-  font-size: 80px;
+  font-size: 75px;
 }
 
 #configMenu {
