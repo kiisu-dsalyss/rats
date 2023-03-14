@@ -275,6 +275,8 @@ var lyrics = {};
     }
        
     rats.populateLyrics = function () {
+      const currentURL = window.location.href;            
+      rats.runSeqPixels(currentURL, '0000FF', 100, 'forward');
       const bar1 = document.getElementById('bar1');
       const bar2 = document.getElementById('bar2');
       const bar3 = document.getElementById('bar3');
