@@ -169,8 +169,20 @@ var lyrics = {};
       var color = rats.getComplimentaryColor(backColor);
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
-      document.getElementById(bannerElementId).style.color = color;      
+      document.getElementById(bannerElementId).style.color = color;
+
+      // Call the fadePixels API to change the LED color
+      const fadeTime = 30; // Adjust fadeTime as needed
+      const currentURL = window.location.href;
+      let url = new URL(`${currentURL}fadePixels?color=${backColor}&fadeTime=${fadeTime}`);
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data.message);
+        })
+        .catch(error => console.error('Error calling fadePixels API:', error));
     };
+
      
     rats.updatePrevious = function() {
       // Find the index of the current region
