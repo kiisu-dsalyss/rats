@@ -287,6 +287,7 @@ var lyrics = {};
     }
        
     rats.populateLyrics = function () {
+      const currentURL = window.location.href;
       const bar1 = document.getElementById('bar1');
       const bar2 = document.getElementById('bar2');
       const bar3 = document.getElementById('bar3');
@@ -307,6 +308,7 @@ var lyrics = {};
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
+              rats.runSeqPixels(currentURL, '00FFFF', 50, 'forward');
               bar.style.backgroundColor = "blue";
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
