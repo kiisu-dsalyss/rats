@@ -189,7 +189,7 @@ var lyrics = {};
           })
           .catch(error => console.error(error));
       } else {
-        runSeqPixels(currentURL, '0000FF', fadeTime, 'forward');
+        // runSeqPixels(currentURL, '0000FF', fadeTime, 'forward');
       }
     };
 
