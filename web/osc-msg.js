@@ -124,10 +124,10 @@ var lyrics = {};
     rats.progressBar = function () {
       if (!region) return;
       const currentURL = window.location.href;
-            
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
       document.getElementById("progressBar").value = progressPercent;
+      rats.ledProgress(currentURL, '00FFFF', progressPercent); 
       return progressPercent; 
     }    
     
@@ -198,8 +198,8 @@ var lyrics = {};
         fetch(url)
           .then(response => response.json())
           .then(() => {
-            for (let i = 0; i < 8; i++) {
-              rats.runSeqPixels(currentURL, regionColor, (fadeTime * 2), 'forward');
+            for (let i = 0; i < 4; i++) {
+              rats.runSeqPixels(currentURL, regionColor, (fadeTime), 'forward');
             }
           })
           .catch(error => console.error(error));
