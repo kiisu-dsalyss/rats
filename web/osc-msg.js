@@ -162,7 +162,19 @@ var lyrics = {};
     rats.updateBeat = function () {
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
-    
+
+    rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
+      if (bannerElementId === 'activeRegion') {
+        let url = new URL(`${currentURL}fadePixels`);
+        url.searchParams.append('color', regionColor);
+        url.searchParams.append('fadeTime', 1000);
+
+        fetch(url)
+          .then(response => response.json())
+          .catch(error => console.error(error));
+      }
+    };
+
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
       // Update the banner element
       var backColor = (rats.decimalToHex(+regionColor));
@@ -171,20 +183,10 @@ var lyrics = {};
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
 
-      // Call the fadePixels API to change the LED color only if bannerElementId is equal to activeRegion
-      if (bannerElementId === 'activeRegion') {
-        const fadeTime = 30; // Adjust fadeTime as needed
-        const currentURL = window.location.href;
-        let url = new URL(`${currentURL}fadePixels?color=${backColor}&fadeTime=${fadeTime}`);
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data.message);
-          })
-          .catch(error => console.error('Error calling fadePixels API:', error));
-      }
+      // Call the ledFadeActive function
+      const currentURL = window.location.href;
+      rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
-
 
      
     rats.updatePrevious = function() {
