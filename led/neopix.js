@@ -27,6 +27,32 @@ function fadePixels(color, fadeTime) {
   });
 }
 
+function pixelToBrightness(color, brightness) {
+  return new Promise((resolve, reject) => {
+    const scriptPath = './led/fadepixel.py';
+    let stdout = '';
+    let stderr = '';
+
+    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, brightness]);
+
+    pythonProcess.stdout.on('data', (data) => {
+      stdout += data;
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      stderr += data;
+    });
+
+    pythonProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve(stdout);
+      } else {
+        reject({ code, stderr });
+      }
+    });
+  });
+}
+
 function seqPixels(color, fadeTime, direction) {
   return new Promise((resolve, reject) => {
     const scriptPath = './led/seqpixel.py';
@@ -55,5 +81,6 @@ function seqPixels(color, fadeTime, direction) {
 
 module.exports = {
   fadePixels,
+  pixelToBrightness,
   seqPixels
 };

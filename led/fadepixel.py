@@ -30,6 +30,22 @@ def fade_out(strip, color, fade_steps):
         strip.show()
         time.sleep(0.01)
 
+def fade_to_brightness(strip, color, target_brightness):
+    """Fade the given color to the specified brightness level"""
+    target_brightness = max(min(target_brightness, 100), 0) # ensure target is between 0 and 100
+    current_brightness = strip.getBrightness()
+    fade_steps = abs(current_brightness - target_brightness)
+    for j in range(fade_steps + 1):
+        brightness = int(current_brightness + j * (target_brightness - current_brightness) / fade_steps)
+        r = (color >> 16) & 0xFF
+        g = (color >> 8) & 0xFF
+        b = color & 0xFF
+        strip.setBrightness(brightness)
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, Color(r, g, b))
+        strip.show()
+        time.sleep(0.01)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')

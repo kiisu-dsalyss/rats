@@ -71,7 +71,19 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
   });
 };
 
-app.get('/fadePixels', async (req, res) => {
+app.post('/pixel_to_brightness', async (req, res) => {
+  const { color, brightness } = req.body;
+
+  try {
+    await pixelToBrightness(color, brightness);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/fadePixels', async (req, res) => {
   const color = req.query.color || 'blue';
   const fadeTime = req.query.fadeTime || 1000;
   try {
@@ -82,7 +94,7 @@ app.get('/fadePixels', async (req, res) => {
   }
 });
 
-app.get('/seqPixels', async (req, res) => {
+app.post('/seqPixels', async (req, res) => {
   const color = req.query.color || 'red';
   const fadeTime = req.query.fadeTime || 500;
   const direction = req.query.direction || 'forward';

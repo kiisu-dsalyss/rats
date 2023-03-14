@@ -125,7 +125,8 @@ var lyrics = {};
       if (!region) return;      
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
-      document.getElementById("progressBar").value = progressPercent;  
+      document.getElementById("progressBar").value = progressPercent;
+      return progressPercent; 
     }    
     
     rats.getLyrics = async function () {
