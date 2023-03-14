@@ -198,8 +198,10 @@ var lyrics = {};
         fetch(url)
           .then(response => response.json())
           .then(() => {
+            let direction = 'forward';
             for (let i = 0; i < 6; i++) {
-              rats.runSeqPixels(currentURL, regionColor, (fadeTime * 2), 'forward');
+              rats.runSeqPixels(currentURL, regionColor, (fadeTime * 2), direction);
+              direction = direction === 'forward' ? 'reverse' : 'forward';
             }
           })
           .catch(error => console.error(error));
