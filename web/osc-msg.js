@@ -124,10 +124,11 @@ var lyrics = {};
     rats.progressBar = function () {
       if (!region) return;
       const currentURL = window.location.href;
+            
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
       document.getElementById("progressBar").value = progressPercent;
-      rats.ledProgress(currentURL, color, progressPercent) 
+      return progressPercent; 
     }    
     
     rats.getLyrics = async function () {
@@ -165,7 +166,7 @@ var lyrics = {};
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
-    rats.runSeqPixels(currentURL, color, fadeTime, direction) {
+    function runSeqPixels(currentURL, color, fadeTime, direction) {
       let url = new URL(`${currentURL}seqPixels`);
       url.searchParams.append('color', color);
       url.searchParams.append('fadeTime', fadeTime);
@@ -176,7 +177,7 @@ var lyrics = {};
         .catch(error => console.error(error));
     }
     
-    rats.ledProgress(currentURL, color, progress) {
+    function ledProgress(currentURL, color, progress) {
       let url = new URL(`${currentURL}pixel_to_brightness`);
       url.searchParams.append('color', color);
       url.searchParams.append('brightness', progress);
