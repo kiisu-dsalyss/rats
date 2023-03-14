@@ -122,11 +122,12 @@ var lyrics = {};
     }    
     
     rats.progressBar = function () {
-      if (!region) return;      
+      if (!region) return;
+      const currentURL = window.location.href;
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
       document.getElementById("progressBar").value = progressPercent;
-      return progressPercent; 
+      rats.ledProgress(currentURL, color, progressPercent) 
     }    
     
     rats.getLyrics = async function () {
@@ -164,11 +165,21 @@ var lyrics = {};
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
-    function runSeqPixels(currentURL, color, fadeTime, direction) {
+    rats.runSeqPixels(currentURL, color, fadeTime, direction) {
       let url = new URL(`${currentURL}seqPixels`);
       url.searchParams.append('color', color);
       url.searchParams.append('fadeTime', fadeTime);
       url.searchParams.append('direction', direction);
+
+      return fetch(url)
+        .then(response => response.json())
+        .catch(error => console.error(error));
+    }
+    
+    rats.ledProgress(currentURL, color, progress) {
+      let url = new URL(`${currentURL}pixel_to_brightness`);
+      url.searchParams.append('color', color);
+      url.searchParams.append('brightness', progress);
 
       return fetch(url)
         .then(response => response.json())
@@ -275,8 +286,6 @@ var lyrics = {};
     }
        
     rats.populateLyrics = function () {
-      const currentURL = window.location.href;            
-      rats.runSeqPixels(currentURL, '0000FF', 100, 'forward');
       const bar1 = document.getElementById('bar1');
       const bar2 = document.getElementById('bar2');
       const bar3 = document.getElementById('bar3');
