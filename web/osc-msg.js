@@ -164,10 +164,11 @@ var lyrics = {};
     };
 
     rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
+      const fadeTime = 50;
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
         url.searchParams.append('color', regionColor);
-        url.searchParams.append('fadeTime', 100);
+        url.searchParams.append('fadeTime', fadeTime);
 
         fetch(url)
           .then(response => response.json())
@@ -177,13 +178,13 @@ var lyrics = {};
         setTimeout(() => {
           let url = new URL(`${currentURL}seqPixels`);
           url.searchParams.append('color', '0000FF');
-          url.searchParams.append('fadeTime', 500);
+          url.searchParams.append('fadeTime', fadeTime);
           url.searchParams.append('direction', 'forward');
 
           fetch(url)
             .then(response => response.json())
             .catch(error => console.error(error));
-        }, 100); // Wait for 100ms (the fadeTime of fadePixels)
+        }, fadeTime); // Wait for 100ms (the fadeTime of fadePixels)
       }
     };
 
