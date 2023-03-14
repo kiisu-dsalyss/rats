@@ -171,17 +171,20 @@ var lyrics = {};
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
 
-      // Call the fadePixels API to change the LED color
-      const fadeTime = 30; // Adjust fadeTime as needed
-      const currentURL = window.location.href;
-      let url = new URL(`${currentURL}fadePixels?color=${backColor}&fadeTime=${fadeTime}`);
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data.message);
-        })
-        .catch(error => console.error('Error calling fadePixels API:', error));
+      // Call the fadePixels API to change the LED color only if bannerElementId is equal to activeRegion
+      if (bannerElementId === activeRegion) {
+        const fadeTime = 1000; // Adjust fadeTime as needed
+        const currentURL = window.location.href;
+        let url = new URL(`${currentURL}fadePixels?color=${backColor}&fadeTime=${fadeTime}`);
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data.message);
+          })
+          .catch(error => console.error('Error calling fadePixels API:', error));
+      }
     };
+
 
      
     rats.updatePrevious = function() {
