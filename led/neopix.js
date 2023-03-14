@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 
-export function fadePixels(color, fadeTime) {
+function fadePixels(color, fadeTime) {
   const scriptPath = './fadepixel.py';
   const holdtime = 30;
 
@@ -19,7 +19,7 @@ export function fadePixels(color, fadeTime) {
   });
 }
 
-export function seqPixels(color, fadeTime, direction) {
+function seqPixels(color, fadeTime, direction) {
   const scriptPath = './seqpixel.py';
 
   const pythonProcess = spawn('sudo', ['python3', scriptPath, color, fadeTime, '--direction', direction]);
