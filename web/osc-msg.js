@@ -202,10 +202,14 @@ var lyrics = {};
           })
           .catch(error => console.error(error));
       } else {
-          rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
+          if (seqPixelsTimeout === null) { // check if timeout is null
+            seqPixelsTimeout = setTimeout(() => { // set timeout
+              rats.runSeqPixels(currentURL, regionColor, fadeTime, 'forward');
+              seqPixelsTimeout = null; // reset timeout
+            }, fadeTime * 2);
+        }
       }
     };
-
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
       const currentURL = window.location.href;
