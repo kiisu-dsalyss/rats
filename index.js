@@ -8,6 +8,8 @@ const fs = require('fs');
 const os = require('os');
 const Wifi = require('rpi-wifi-connection');
 const wifi = new Wifi();
+const { fadePixels, seqPixels } = require('./led/neopix');
+
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -69,12 +71,29 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
   });
 };
 
+app.get('/fadePixels', (req, res) => {
+  const color = req.query.color || 'blue';
+  const fadeTime = req.query.fadeTime || 1000;
+  fadePixels(color, fadeTime);
+  res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds` });
+});
+
+app.get('/seqPixels', (req, res) => {
+  const color = req.query.color || 'red';
+  const fadeTime = req.query.fadeTime || 500;
+  const direction = req.query.direction || 'forward';
+  seqPixels(color, fadeTime, direction);
+  res.status(200).json({ message: `Sequencing pixels in ${color} with fade time of ${fadeTime} milliseconds and ${direction} direction` });
+});
+
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
+
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
 // Set up a route to serve the config data as JSON
 app.get('/config', (req, res) => {
   res.json(config);
 });
+
 // Get the local IP address of the device
 app.get('/ip', (req, res) => {
   const networkInterfaces = os.networkInterfaces();
