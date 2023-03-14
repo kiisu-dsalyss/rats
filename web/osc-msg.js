@@ -187,7 +187,7 @@ var lyrics = {};
     };
 
     rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
-      const fadeTime = 100;
+      const fadeTime = 500;
 
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
@@ -344,11 +344,7 @@ var lyrics = {};
     
     rats.update = function () {
       setInterval(rats.getRegions, 300);
-      setInterval({
-        rats.getLyrics, 300;
-        rats.runSeqPixels(currentURL, '00FFFF', 50, 'forward');
-        }
-      );
+      setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      
     };
 
