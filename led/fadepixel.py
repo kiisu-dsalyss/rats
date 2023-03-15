@@ -17,38 +17,10 @@ def set_color(strip, color):
         strip.setPixelColor(i, color)
     strip.show()
 
-def fade_out(strip, color, 30):
+def fade_out(strip, color, fade_steps):
     """Fade out the given color over the specified number of steps"""
-    current_color = color
-    current_fade_steps = fade_steps
-    while True:
-        for j in range(current_fade_steps, 0, -1):
-            brightness = int(j * (255/current_fade_steps))
-            r = (current_color >> 16) & 0xFF
-            g = (current_color >> 8) & 0xFF
-            b = current_color & 0xFF
-            strip.setBrightness(brightness)
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(r, g, b))
-            strip.show()
-            time.sleep(0.01)
-            # Check for new command every 0.1 seconds
-            if time.monotonic() % 0.1 == 0:
-                # Check for new color or fade_steps
-                if color != current_color or fade_steps != current_fade_steps:
-                    current_color = color
-                    current_fade_steps = fade_steps
-                    break
-    strip.setBrightness(0)
-    strip.show()
-
-def fade_to_brightness(strip, color, target_brightness):
-    """Fade the given color to the specified brightness level"""
-    target_brightness = max(min(target_brightness, 100), 0) # ensure target is between 0 and 100
-    current_brightness = strip.getBrightness()
-    fade_steps = abs(current_brightness - target_brightness)
-    for j in range(fade_steps + 1):
-        brightness = int(current_brightness + j * (target_brightness - current_brightness) / fade_steps)
+    for j in range(fade_steps, 0, -1):
+        brightness = int(j * (255/fade_steps))
         r = (color >> 16) & 0xFF
         g = (color >> 8) & 0xFF
         b = color & 0xFF
@@ -61,7 +33,6 @@ def fade_to_brightness(strip, color, target_brightness):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
-    parser.add_argument('time_ms', type=int, help='Time to display color in milliseconds')
     parser.add_argument('--fade_steps', type=int, default=100, help='Number of steps to fade out')
     args = parser.parse_args()
 
@@ -70,17 +41,21 @@ if __name__ == '__main__':
     # Initialize the library (must be called once before other functions).
     strip.begin()
 
-    # Convert hex color code to integer value
-    color = int(args.color, 16)
+    prev_color = None  # to keep track of the previous color
+    while True:
+        # Convert hex color code to integer value
+        color = int(args.color, 16)
+        if color != prev_color:
+            prev_color = color  # update previous color
 
-    # Set all pixels to given color
-    set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
+            # Set all pixels to given color
+            set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
 
-    # Wait for specified time
-    time.sleep(args.time_ms / 1000)
+            # Wait for specified time
+            time.sleep(args.time_ms / 1000)
 
-    # Fade out the LEDs
-    fade_out(strip, color, args.fade_steps)
+            # Fade out the LEDs
+            fade_out(strip, color, args.fade_steps)
 
-    # Turn off all LEDs
-    set_color(strip, Color(0, 0, 0))
+            # Turn off all LEDs
+            set_color(strip, Color(0, 0, 0))

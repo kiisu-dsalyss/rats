@@ -71,17 +71,17 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
   });
 };
 
-app.get('/pixel_to_brightness', async (req, res) => {
-  const { color, brightness } = req.body;
-
-  try {
-    await pixelToBrightness(color, brightness);
-    res.sendStatus(200);
-  } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
-  }
-});
+// app.get('/pixel_to_brightness', async (req, res) => {
+//   const { color, brightness } = req.body;
+// 
+//   try {
+//     await pixelToBrightness(color, brightness);
+//     res.sendStatus(200);
+//   } catch (err) {
+//     console.error(err);
+//     res.sendStatus(500);
+//   }
+// });
 
 app.get('/fadePixels', async (req, res) => {
   const color = req.query.color || 'blue';
