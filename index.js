@@ -106,6 +106,11 @@ app.get('/seqPixels', async (req, res) => {
   const color = req.query.color || 'red';
   const fadeTime = req.query.fadeTime || 500;
   const direction = req.query.direction || 'forward';
+
+  if (!intervalId) {
+    return res.status(400).json({ message: 'Cannot sequence pixels before fadeTime has passed' });
+  }
+
   try {
     const output = await seqPixels(color, fadeTime, direction);
     res.status(200).json({ message: `Sequencing pixels in ${color} with fade time of ${fadeTime} milliseconds and ${direction} direction`, output });
@@ -113,7 +118,6 @@ app.get('/seqPixels', async (req, res) => {
     res.status(500).json({ message: 'Error running seqPixels', error });
   }
 });
-
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 
