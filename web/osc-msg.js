@@ -329,10 +329,10 @@ var activeRegionColor = "00FFFF";
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);
-      rats.ledFadeActive("00FFFF");    
     };
 
     rats.getDefaultTrack = function () {
+      rats.ledFadeActive("00FFFF");        
       const currentURL = window.location.href;        
       let url = new URL(`${currentURL}config`);
       return fetch(url)
