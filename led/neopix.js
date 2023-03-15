@@ -3,11 +3,10 @@ const { spawn } = require('child_process');
 function fadePixels(color, fadeTime) {
   return new Promise((resolve, reject) => {
     const scriptPath = './led/fadepixel.py';
-    const holdtime = 30;
     let stdout = '';
     let stderr = '';
 
-    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, holdtime, '--fade', fadeTime]);
+    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, fadeTime]);
 
     pythonProcess.stdout.on('data', (data) => {
       stdout += data;
@@ -26,6 +25,7 @@ function fadePixels(color, fadeTime) {
     });
   });
 }
+
 
 function seqPixels(color, fadeTime, direction) {
   return new Promise((resolve, reject) => {
