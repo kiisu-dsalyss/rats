@@ -175,7 +175,7 @@ var lyrics = {};
     }
 
     rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
-      const fadeTime = 300;
+      const fadeTime = 500;
 
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
@@ -203,7 +203,7 @@ var lyrics = {};
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
       // Call the ledFadeActive function
-//       rats.ledFadeActive(bannerElementId, backColor, currentURL);
+      rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
      
@@ -230,7 +230,6 @@ var lyrics = {};
     }
     
     rats.checkActive = function() {
-        const currentURL = window.location.href;  
         // Find the index of the current region
         var currentRegionIndex = -1;
         for (var regionName in regions) {
@@ -249,7 +248,6 @@ var lyrics = {};
             thisRegionColor = regions[thisRegionName].Color;
         }
         // Update the next region banner element
-        rats.ledFadeActive(bannerElementId, nextRegionColor, currentURL);
         rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
     }    
     
