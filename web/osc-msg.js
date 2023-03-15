@@ -128,7 +128,6 @@ var progress;
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
       document.getElementById("progressBar").value = progressPercent;
-      progress == progressPercent;
     }    
     
     rats.getLyrics = async function () {
@@ -310,8 +309,7 @@ var progress;
       region = currentRegion;
       var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
-      var pct = progressBar;
-      document.getElementById('nextth').innerHTML = progress;
+      document.getElementById('nextth').innerHTML = document.getElementById("progressBar").value;
     };
 
     rats.beatPosition = function (data) {
