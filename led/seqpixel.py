@@ -21,6 +21,8 @@ def light_led(strip, index, color, fade_time):
     time.sleep(fade_time / 1000)
 
 if __name__ == '__main__':
+    # Clean up GPIO pins
+    GPIO.cleanup()
     parser = argparse.ArgumentParser(description='Set NeoPixel sequence')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
     parser.add_argument('fade_time', type=int, help='Time to fade between LEDs in milliseconds')
