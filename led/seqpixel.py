@@ -39,16 +39,16 @@ if __name__ == '__main__':
 
     # Light up each LED in sequence
     if args.direction == 'forward':
-        for i in range(strip.numPixels()):
+        i = 0
+        while True:
             light_led(strip, i, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF), args.fade_time)
+            i = (i + 1) % strip.numPixels()
     elif args.direction == 'reverse':
-        for i in range(strip.numPixels() - 1, -1, -1):
+        i = strip.numPixels() - 1
+        while True:
             light_led(strip, i, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF), args.fade_time)
+            i = (i - 1) % strip.numPixels()
 
-    # Turn off all LEDs
-    for i in range(strip.numPixels()):
-        strip.setPixelColor(i, Color(0, 0, 0))
-    strip.show()
-    
     # Clean up GPIO pins
     GPIO.cleanup()
+

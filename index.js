@@ -13,7 +13,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
-seqPixels('00FFFF', 500, 'reverse')
+seqPixels('00FFFF', 10, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
