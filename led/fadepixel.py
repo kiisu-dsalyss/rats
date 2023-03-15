@@ -19,23 +19,70 @@ def set_color(strip, color):
 
 last_color = None  # global variable to store last color
 
-def fade_out(strip, color, fade_steps, repeat=False):
-    """Fade out the given color over the specified number of steps"""
+last_color = None  # global variable to store last color
+
+def fade_out(strip, colors, fade_steps, color_changed=False):
+    """Fade out the given colors over the specified number of steps"""
     global last_color
-    if color != last_color:  # only fade out if new color is received
+    if color_changed or last_color is None:  # fade out only if color has changed or it's the first time
+        for color in itertools.cycle(colors):
+            for j in range(fade_steps, 0, -1):
+                brightness = int(j * (255/fade_steps))
+                r = (color >> 16) & 0xFF
+                g = (color >> 8) & 0xFF
+                b = color & 0xFF
+                strip.setBrightness(brightness)
+                for i in range(strip.numPixels()):
+                    strip.setPixelColor(i, Color(r, g, b))
+                strip.show()
+                time.sleep(0.01)
+            for j in range(0, fade_steps):
+                brightness = int(j * (255/fade_steps))
+                r = (color >> 16) & 0xFF
+                g = (color >> 8) & 0xFF
+                b = color & 0xFF
+                strip.setBrightness(brightness)
+                for i in range(strip.numPixels()):
+                    strip.setPixelColor(i, Color(r, g, b))
+                strip.show()
+                time.sleep(0.01)
+            last_color = color
+            if color_changed:  # stop looping if color has changed
+                break
+    else:
+        # Fade out the current color before fading in the new color
         for j in range(fade_steps, 0, -1):
             brightness = int(j * (255/fade_steps))
-            r = (color >> 16) & 0xFF
-            g = (color >> 8) & 0xFF
-            b = color & 0xFF
+            r = (last_color >> 16) & 0xFF
+            g = (last_color >> 8) & 0xFF
+            b = last_color & 0xFF
             strip.setBrightness(brightness)
             for i in range(strip.numPixels()):
                 strip.setPixelColor(i, Color(r, g, b))
             strip.show()
             time.sleep(0.01)
-        last_color = color
-    if repeat:  # repeat fade out if requested
-        fade_out(strip, color, fade_steps, repeat=True)
+        for j in range(0, fade_steps):
+            brightness = int(j * (255/fade_steps))
+            r = (last_color >> 16) & 0xFF
+            g = (last_color >> 8) & 0xFF
+            b = last_color & 0xFF
+            strip.setBrightness(brightness)
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, Color(r, g, b))
+            strip.show()
+            time.sleep(0.01)
+        # Fade in the new color
+        for j in range(0, fade_steps):
+            brightness = int(j * (255/fade_steps))
+            r = (colors[0] >> 16) & 0xFF
+            g = (colors[0] >> 8) & 0xFF
+            b = colors[0] & 0xFF
+            strip.setBrightness(brightness)
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, Color(r, g, b))
+            strip.show()
+            time.sleep(0.01)
+        for j in range(fade_steps,
 
 
 if __name__ == '__main__':
