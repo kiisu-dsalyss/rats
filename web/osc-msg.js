@@ -303,10 +303,11 @@ var activeRegionColor = "00FFFF";
 
     rats.updateActive = function (currentRegion) {
       rats.updateBanner("activeRegion", currentRegion, regions[`${currentRegion}`].Color);
+      var regColor = regions[`${currentRegion}`].Color;
       rats.updatePrevious();
       rats.updateNext();
       region = currentRegion;
-      var ledColor = (rats.decimalToHex(+regions[`${currentRegion}`].Color));      
+      var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
     };
 
