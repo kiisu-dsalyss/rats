@@ -176,40 +176,36 @@ var activeRegionColor = "00FFFF";
     }
 
     rats.ledFadeActive = function (pixcolor) {
-      const currentURL = window.location.href;    
+      const currentURL = window.location.href;
       const fadeTime = 50;
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
   
-      // Declare a recursive function to call runSeqPixels until the fade effect is complete
-      function runUntilFadeComplete() {
-        rats.runSeqPixels(currentURL, pixcolor, fadeTime, 'forward')
-          .then(() => {
-            // If the fade effect is complete, exit the recursion
-            if (fadeComplete) {
-              return;
-            }
-            // Otherwise, wait for the specified fadeTime and call the function again
-            setTimeout(runUntilFadeComplete, fadeTime);
-          })
-          .catch(error => console.error(error));
-      }
-
-      let fadeComplete = false;
+      let stopSequence = false;
 
       fetch(url)
         .then(response => response.json())
         .then(() => {
-          // Set fadeComplete to true when the fade effect is complete
-          fadeComplete = true;
-          // Call runUntilFadeComplete to start the sequence animation
-          runUntilFadeComplete();
+          function runSeqWithTimeout() {
+            if (stopSequence) {
+              return;
+            }
+            rats.runSeqPixels(currentURL, pixcolor, fadeTime, 'forward')
+              .then(() => {
+                setTimeout(runSeqWithTimeout, fadeTime);
+              })
+              .catch(error => console.error(error));
+          }
+      
+          runSeqWithTimeout();
         })
         .catch(error => console.error(error));
+
+      return function() {
+        stopSequence = true;
+      };
     };
-
-
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
       const currentURL = window.location.href;
