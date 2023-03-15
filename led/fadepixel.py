@@ -60,7 +60,4 @@ if __name__ == '__main__':
         fade_out(strip, color, args.fade_steps)
 
         # Turn off all LEDs
-        set_color(strip, Color(0, 0, 0))
-
-        # Remember the last color that was displayed
-        last_color = color
+        set_color(strip, Color(0, 0, 
