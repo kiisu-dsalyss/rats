@@ -111,10 +111,13 @@ app.get('/seqPixels', async (req, res) => {
 
     // start a new interval to call seqPixels after the specified fadeTime
     intervalId = setInterval(async () => {
-      isSeqPixelsRunning = true;
-      const newOutput = await seqPixels(color, fadeTime, direction);
-      console.log('New output:', newOutput);
-    }, fadeTime);
+      if (!isSeqPixelsRunning) {
+        isSeqPixelsRunning = true;
+        const newOutput = await seqPixels(color, fadeTime, direction);
+        console.log('New output:', newOutput);
+        isSeqPixelsRunning = false;
+      }
+    }, fadeTime + 20);
   } catch (error) {
     res.status(500).json({ message: 'Error running seqPixels', error });
   }
