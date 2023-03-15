@@ -181,14 +181,34 @@ var activeRegionColor = "00FFFF";
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
+  
+      // Declare a recursive function to call runSeqPixels until the fade effect is complete
+      function runUntilFadeComplete() {
+        rats.runSeqPixels(currentURL, pixcolor, fadeTime, 'forward')
+          .then(() => {
+            // If the fade effect is complete, exit the recursion
+            if (fadeComplete) {
+              return;
+            }
+            // Otherwise, wait for the specified fadeTime and call the function again
+            setTimeout(runUntilFadeComplete, fadeTime);
+          })
+          .catch(error => console.error(error));
+      }
+
+      let fadeComplete = false;
+
       fetch(url)
         .then(response => response.json())
         .then(() => {
-          // Perform any other actions on the LEDs after the fadePixels is completed
-          rats.runSeqPixels(currentURL, pixcolor, 50, 'forward');
+          // Set fadeComplete to true when the fade effect is complete
+          fadeComplete = true;
+          // Call runUntilFadeComplete to start the sequence animation
+          runUntilFadeComplete();
         })
         .catch(error => console.error(error));
     };
+
 
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
