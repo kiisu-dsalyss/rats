@@ -87,6 +87,21 @@ cancelButton.addEventListener('click', () => {
   document.addEventListener('dblclick', eventListener);
 });
 
+const addRebootButton = () => {
+  const rebootButton = document.createElement('button');
+  rebootButton.textContent = 'Reboot';
+  rebootButton.addEventListener('click', async () => {
+    try {
+      const response = await fetch(`${serverUrl}reboot`);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  document.body.appendChild(rebootButton);
+};
+
 // Keyboard for configMenu
 var keyboard = document.getElementById('virtualKeyboard');
 var lastInput = null;
