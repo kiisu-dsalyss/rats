@@ -17,7 +17,7 @@ def set_color(strip, color):
         strip.setPixelColor(i, color)
     strip.show()
 
-def fade_out(strip, color, fade_steps):
+def fade_out(strip, color, 30):
     """Fade out the given color over the specified number of steps"""
     current_color = color
     current_fade_steps = fade_steps

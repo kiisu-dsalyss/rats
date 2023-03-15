@@ -7,7 +7,7 @@ function fadePixels(color, fadeTime) {
     let stdout = '';
     let stderr = '';
 
-    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, holdtime, '--fade', fadeTime]);
+    const pythonProcess = spawn('sudo', ['python3', scriptPath, color, 30, '--fade', 30]);
 
     pythonProcess.stdout.on('data', (data) => {
       stdout += data;
