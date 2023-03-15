@@ -126,7 +126,8 @@ var activeRegionColor = "00FFFF";
       if (!region) return;      
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
-      document.getElementById("progressBar").value = progressPercent;  
+      document.getElementById("progressBar").value = progressPercent;
+      return progressPercent; 
     }    
     
     rats.getLyrics = async function () {
@@ -308,7 +309,7 @@ var activeRegionColor = "00FFFF";
       region = currentRegion;
       var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
-      document.getElementById('nextth').innerHTML = ledColor;
+      document.getElementById('nextth').innerHTML = progressBar;
     };
 
     rats.beatPosition = function (data) {
