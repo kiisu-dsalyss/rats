@@ -38,6 +38,9 @@ const eventListener = async (event) => {
   configMenu.style.display = 'block';
   songInfoTable.style.display = 'none';
 
+  // Add the "Reboot" button to the config menu
+  addRebootButton();
+
   // Remove the dblclick event listener from the document
   document.removeEventListener('dblclick', eventListener);
 };
@@ -99,7 +102,7 @@ const addRebootButton = () => {
       console.error(error);
     }
   });
-  document.body.appendChild(rebootButton);
+  configMenu.appendChild(rebootButton);
 };
 
 // Keyboard for configMenu

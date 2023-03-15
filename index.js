@@ -97,7 +97,7 @@ app.get('/fadePixels', async (req, res) => {
         const seqOutput = await seqPixels(color, 30, direction);
         console.log('Seq output:', seqOutput);
         isForward = !isForward;
-      }, 35); // add 1ms to the interval to ensure a delay between calls to seqPixels
+      }, 85); // add 1ms to the interval to ensure a delay between calls to seqPixels
     }, 5);
     
   } catch (error) {
