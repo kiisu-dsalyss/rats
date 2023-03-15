@@ -198,7 +198,6 @@ var activeRegionColor = "00FFFF";
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
-      rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
      
@@ -290,6 +289,7 @@ var activeRegionColor = "00FFFF";
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
+              rats.ledFadeActive(activeRegionColor);          
               bar.style.backgroundColor = activeRegionColor;
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
