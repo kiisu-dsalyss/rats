@@ -13,6 +13,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
+seqPixels('00FFFF', 500, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -195,7 +196,6 @@ app.listen(config.port, () => {
 });
 
 wss.on("connection", function (socket) {
-    seqPixels('00FFFF', 500, 'reverse')
     console.log("A Web Socket connection has been established!");
     var socketPort = new osc.WebSocketPort({
         socket: socket

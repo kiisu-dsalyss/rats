@@ -176,51 +176,18 @@ var activeRegionColor = "00FFFF";
     }
 
     rats.ledFadeActive = function (pixcolor) {
-      const currentURL = window.location.href;
+      const currentURL = window.location.href;    
       const fadeTime = 50;
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
-
-      let stopSequence = false;
-      let runningSequence = null;
-
-      if (runningSequence) {
-        runningSequence();
-      }
-
-      const stopCurrentSequence = function() {
-        stopSequence = true;
-      };
-
       fetch(url)
         .then(response => response.json())
         .then(() => {
-          stopSequence = false;
-          runningSequence = function() {
-            stopSequence = true;
-          };
-
-          function runSeqWithTimeout() {
-            if (stopSequence) {
-              return;
-            }
-            rats.runSeqPixels(currentURL, pixcolor, fadeTime, 'forward')
-              .then(() => {
-                if (!stopSequence) {
-                  setTimeout(runSeqWithTimeout, fadeTime);
-                } else {
-                  runningSequence = null;
-                }
-              })
-              .catch(error => console.error(error));
-          }
-      
-          runSeqWithTimeout();
+          // Perform any other actions on the LEDs after the fadePixels is completed
+          rats.runSeqPixels(currentURL, pixcolor, fadeTime * 2, 'forward');
         })
         .catch(error => console.error(error));
-
-      return stopCurrentSequence;
     };
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
