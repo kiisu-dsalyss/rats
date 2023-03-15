@@ -13,7 +13,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
-seqPixels('00FFFF', 50, 'reverse')
+seqPixels('00FFFF', 300, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -73,56 +73,46 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 };
 
 let intervalId = null;
-let isSeqPixelsRunning = false;
 
 app.get('/fadePixels', async (req, res) => {
-  // stop seqPixels if it's running
-  if (isSeqPixelsRunning) {
+  const color = req.query.color || 'blue';
+  const fadeTime = req.query.fadeTime || 1000;
+  
+  // clear the previous interval if it exists
+  if (intervalId) {
     clearInterval(intervalId);
     intervalId = null;
-    isSeqPixelsRunning = false;
   }
-
-  const color = req.query.color || '0000FF';
-  const fadeTime = req.query.fadeTime || 50;
+  
   try {
     const output = await fadePixels(color, fadeTime);
     res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds`, output });
+    
+    // wait for fadeTime + 5ms before starting the loop
+    setTimeout(() => {
+      intervalId = setInterval(async () => {
+        const seqOutput = await seqPixels(color, fadeTime, 'forward');
+        console.log('Seq output:', seqOutput);
+      }, fadeTime);
+    }, fadeTime + 5);
+    
   } catch (error) {
     res.status(500).json({ message: 'Error running fadePixels', error });
   }
 });
 
+
 app.get('/seqPixels', async (req, res) => {
-  const color = req.query.color || 'FF0000';
-  const fadeTime = req.query.fadeTime || 50;
+  const color = req.query.color || 'red';
+  const fadeTime = req.query.fadeTime || 500;
   const direction = req.query.direction || 'forward';
-
-  // clear the previous interval if it exists
-  if (intervalId) {
-    clearInterval(intervalId);
-    intervalId = null;
-    isSeqPixelsRunning = false;
-  }
-
   try {
     const output = await seqPixels(color, fadeTime, direction);
     res.status(200).json({ message: `Sequencing pixels in ${color} with fade time of ${fadeTime} milliseconds and ${direction} direction`, output });
-
-    // start a new interval to call seqPixels after the specified fadeTime
-    intervalId = setInterval(async () => {
-      if (!isSeqPixelsRunning) {
-        isSeqPixelsRunning = true;
-        const newOutput = await seqPixels(color, fadeTime, direction);
-        console.log('New output:', newOutput);
-        isSeqPixelsRunning = false;
-      }
-    }, fadeTime + 5);
   } catch (error) {
     res.status(500).json({ message: 'Error running seqPixels', error });
   }
 });
-
 
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
