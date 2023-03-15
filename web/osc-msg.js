@@ -157,7 +157,6 @@ var activeRegionColor = "00FFFF";
       }      
       if (msg.address === "/lastregion/name") {
         rats.updateActive(msg.args[0]);
-        rats.ledFadeActive(activeRegionColor);          
       }
     };
   
@@ -178,7 +177,7 @@ var activeRegionColor = "00FFFF";
 
     rats.ledFadeActive = function (pixcolor) {
       const currentURL = window.location.href;    
-      const fadeTime = 30;
+      const fadeTime = 50;
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
@@ -199,6 +198,7 @@ var activeRegionColor = "00FFFF";
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
+      rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
      
@@ -290,7 +290,7 @@ var activeRegionColor = "00FFFF";
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
-              bar.style.backgroundColor = activeRegionColor;
+              bar.style.backgroundColor = "blue";
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
                   note.innerHTML = lastNote;
