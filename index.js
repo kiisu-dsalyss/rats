@@ -13,7 +13,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
-seqPixels('00FFFF', 30, 'reverse')
+seqPixels('00FFFF', 50, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -83,8 +83,8 @@ app.get('/fadePixels', async (req, res) => {
     isSeqPixelsRunning = false;
   }
 
-  const color = req.query.color || 'blue';
-  const fadeTime = req.query.fadeTime || 1000;
+  const color = req.query.color || '0000FF';
+  const fadeTime = req.query.fadeTime || 50;
   try {
     const output = await fadePixels(color, fadeTime);
     res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds`, output });
@@ -94,8 +94,8 @@ app.get('/fadePixels', async (req, res) => {
 });
 
 app.get('/seqPixels', async (req, res) => {
-  const color = req.query.color || 'red';
-  const fadeTime = req.query.fadeTime || 500;
+  const color = req.query.color || 'FF0000';
+  const fadeTime = req.query.fadeTime || 50;
   const direction = req.query.direction || 'forward';
 
   // clear the previous interval if it exists
@@ -117,7 +117,7 @@ app.get('/seqPixels', async (req, res) => {
         console.log('New output:', newOutput);
         isSeqPixelsRunning = false;
       }
-    }, fadeTime + 20);
+    }, fadeTime + 5);
   } catch (error) {
     res.status(500).json({ message: 'Error running seqPixels', error });
   }
