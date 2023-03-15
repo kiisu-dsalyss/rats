@@ -9,12 +9,12 @@ const os = require('os');
 const Wifi = require('rpi-wifi-connection');
 const wifi = new Wifi();
 const { fadePixels, seqPixels } = require('./led/neopix');
-
+const { exec } = require('child_process');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-fadePixels(randomHexColor, 4500)
+fadePixels(randomHexColor, 6500)
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -182,6 +182,15 @@ app.get('/wifi/scan', async (req, res) => {
   }
 });
 
+app.get('/reboot', (req, res) => {
+  exec('sudo reboot', (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error initiating reboot' });
+    }
+    res.status(200).json({ message: 'Reboot initiated' });
+  });
+});
 
 // Update config
 app.put('/config', (req, res) => {
