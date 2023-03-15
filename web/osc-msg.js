@@ -291,6 +291,7 @@ var activeRegionColor = "00FFFF";
 
           if (i === beat) {
               bar.style.backgroundColor = "blue";
+              rat.ledFadeActive(activeRegionColor);
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
                   note.innerHTML = lastNote;
