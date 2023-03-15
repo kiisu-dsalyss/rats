@@ -127,7 +127,7 @@ var activeRegionColor = "00FFFF";
       const progressRegion = regions[`${region}`];
       var progressPercent = rats.calcPercentage(+progressRegion.Start, +progressRegion.End, rats.timePosition);
       document.getElementById("progressBar").value = progressPercent;
-      return +progressPercent; 
+      return progressPercent.value; 
     }    
     
     rats.getLyrics = async function () {
