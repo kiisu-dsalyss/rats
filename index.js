@@ -14,7 +14,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-fadePixels(randomHexColor, 300)
+fadePixels(randomHexColor, 800)
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -92,7 +92,7 @@ app.get('/fadePixels', async (req, res) => {
     // wait for fadeTime + 5ms before starting the loop
     setTimeout(() => {
       intervalId = setInterval(async () => {
-        const seqOutput = await seqPixels(color, fadeTime, 'forward');
+        const seqOutput = await seqPixels(color, 30, 'forward');
         console.log('Seq output:', seqOutput);
       }, fadeTime + 15); // add 1ms to the interval to ensure a delay between calls to seqPixels
     }, 5);
