@@ -42,17 +42,18 @@ if __name__ == '__main__':
     # Initialize the library (must be called once before other functions).
     strip.begin()
 
-    # Convert hex color code to integer value
-    color = int(args.color, 16)
+    while True:
+        # Convert hex color code to integer value
+        color = int(args.color, 16)
 
-    # Set all pixels to given color
-    set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
+        # Set all pixels to given color
+        set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
 
-    # Wait for specified time
-    time.sleep(args.time_ms / 1000)
+        # Wait for specified time
+        time.sleep(args.time_ms / 1000)
 
-    # Fade out the LEDs
-    fade_out(strip, color, args.fade_steps)
+        # Fade out the LEDs
+        fade_out(strip, color, args.fade_steps)
 
-    # Turn off all LEDs
-    set_color(strip, Color(0, 0, 0))
+        # Turn off all LEDs
+        set_color(strip, Color(0, 0, 0))
