@@ -332,7 +332,7 @@ var activeRegionColor = "00FFFF";
     };
 
     rats.getDefaultTrack = function () {
-      rats.ledFadeActive("00FFFF");        
+      rats.ledFadeActive(activeRegionColor);        
       const currentURL = window.location.href;        
       let url = new URL(`${currentURL}config`);
       return fetch(url)
