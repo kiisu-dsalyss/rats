@@ -93,14 +93,13 @@ app.get('/fadePixels', async (req, res) => {
       intervalId = setInterval(async () => {
         const seqOutput = await seqPixels(color, fadeTime, 'forward');
         console.log('Seq output:', seqOutput);
-      }, fadeTime);
+      }, fadeTime + 25); // add 25ms to the interval to ensure a delay between calls to seqPixels
     }, fadeTime + 5);
     
   } catch (error) {
     res.status(500).json({ message: 'Error running fadePixels', error });
   }
 });
-
 
 app.get('/seqPixels', async (req, res) => {
   const color = req.query.color || 'red';
