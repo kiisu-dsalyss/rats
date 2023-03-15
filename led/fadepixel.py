@@ -32,6 +32,8 @@ def fade_out(strip, color, fade_steps):
         time.sleep(0.01)
 
 if __name__ == '__main__':
+    # Clean up GPIO pins
+    GPIO.cleanup()
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
     parser.add_argument('time_ms', type=int, help='Time to display color in milliseconds')
