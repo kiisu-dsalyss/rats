@@ -33,6 +33,7 @@ def fade_out(strip, color, fade_steps):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
+    parser.add_argument('time_ms', type=int, help='Time to display color in milliseconds')
     parser.add_argument('--fade_steps', type=int, default=100, help='Number of steps to fade out')
     args = parser.parse_args()
 
@@ -41,21 +42,17 @@ if __name__ == '__main__':
     # Initialize the library (must be called once before other functions).
     strip.begin()
 
-    prev_color = None  # to keep track of the previous color
-    while True:
-        # Convert hex color code to integer value
-        color = int(args.color, 16)
-        if color != prev_color:
-            prev_color = color  # update previous color
+    # Convert hex color code to integer value
+    color = int(args.color, 16)
 
-            # Set all pixels to given color
-            set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
+    # Set all pixels to given color
+    set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
 
-            # Wait for specified time
-            time.sleep(args.time_ms / 1000)
+    # Wait for specified time
+    time.sleep(args.time_ms / 1000)
 
-            # Fade out the LEDs
-            fade_out(strip, color, args.fade_steps)
+    # Fade out the LEDs
+    fade_out(strip, color, args.fade_steps)
 
-            # Turn off all LEDs
-            set_color(strip, Color(0, 0, 0))
+    # Turn off all LEDs
+    set_color(strip, Color(0, 0, 0))
