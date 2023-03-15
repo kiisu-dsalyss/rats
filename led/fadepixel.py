@@ -1,6 +1,7 @@
 import argparse
 import time
 from rpi_ws281x import PixelStrip, Color
+import RPi.GPIO as GPIO
 
 # LED strip configuration:
 LED_COUNT = 8      # Number of LED pixels.
@@ -56,3 +57,7 @@ if __name__ == '__main__':
 
     # Turn off all LEDs
     set_color(strip, Color(0, 0, 0))
+    
+    # Clean up GPIO pins
+    GPIO.cleanup()
+    
