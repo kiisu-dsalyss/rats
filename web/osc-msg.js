@@ -164,7 +164,7 @@ var activeRegionColor = "00FFFF";
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
-    function runSeqPixels(currentURL, color, fadeTime, direction) {
+    rats.runSeqPixels = function (currentURL, color, fadeTime, direction) {
       let url = new URL(`${currentURL}seqPixels`);
       url.searchParams.append('color', color);
       url.searchParams.append('fadeTime', fadeTime);
