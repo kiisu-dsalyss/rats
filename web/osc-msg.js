@@ -187,7 +187,7 @@ var lyrics = {};
     };
 
     rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
-      const fadeTime = 30;
+      const fadeTime = 300;
 
       if (bannerElementId === 'activeRegion') {
         let url = new URL(`${currentURL}fadePixels`);
