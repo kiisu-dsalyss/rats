@@ -3,6 +3,7 @@ var regions = {};
 var region;
 var lyrics = {};
 var activeRegionColor = "00FFFF";
+var lcount = 0;
 
 (function () {
     "use strict";
@@ -309,6 +310,8 @@ var activeRegionColor = "00FFFF";
       region = currentRegion;
       var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
+      document.getElementById('nextth').innerHTML = lcount;
+      lcount ++;
     };
 
     rats.beatPosition = function (data) {
