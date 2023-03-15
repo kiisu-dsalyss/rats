@@ -14,7 +14,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-seqPixels(randomHexColor, 400, 'reverse')
+seqPixels(randomHexColor, 500, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
