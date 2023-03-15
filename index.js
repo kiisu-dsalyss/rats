@@ -14,7 +14,7 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-fadePixels(randomHexColor, 1500)
+fadePixels(randomHexColor, 3500)
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -74,6 +74,7 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 };
 
 let intervalId = null;
+let isForward = true;
 
 app.get('/fadePixels', async (req, res) => {
   const color = req.query.color || 'blue';
@@ -92,8 +93,10 @@ app.get('/fadePixels', async (req, res) => {
     // wait for fadeTime + 5ms before starting the loop
     setTimeout(() => {
       intervalId = setInterval(async () => {
-        const seqOutput = await seqPixels(color, 30, 'forward');
+        const direction = isForward ? 'forward' : 'reverse';
+        const seqOutput = await seqPixels(color, 30, direction);
         console.log('Seq output:', seqOutput);
+        isForward = !isForward;
       }, fadeTime + 15); // add 1ms to the interval to ensure a delay between calls to seqPixels
     }, 5);
     

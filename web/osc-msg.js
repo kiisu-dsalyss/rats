@@ -185,7 +185,7 @@ var activeRegionColor = "00FFFF";
         .then(response => response.json())
         .then(() => {
           // Perform any other actions on the LEDs after the fadePixels is completed
-          rats.runSeqPixels(currentURL, pixcolor, 30, 'reverse');
+//           rats.runSeqPixels(currentURL, pixcolor, 30, 'reverse');
         })
         .catch(error => console.error(error));
     };
