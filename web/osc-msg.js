@@ -181,19 +181,37 @@ var activeRegionColor = "00FFFF";
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
-  
+
       let stopSequence = false;
+      let runningSequence = null;
+
+      if (runningSequence) {
+        runningSequence();
+      }
+
+      const stopCurrentSequence = function() {
+        stopSequence = true;
+      };
 
       fetch(url)
         .then(response => response.json())
         .then(() => {
+          stopSequence = false;
+          runningSequence = function() {
+            stopSequence = true;
+          };
+
           function runSeqWithTimeout() {
             if (stopSequence) {
               return;
             }
             rats.runSeqPixels(currentURL, pixcolor, fadeTime, 'forward')
               .then(() => {
-                setTimeout(runSeqWithTimeout, fadeTime);
+                if (!stopSequence) {
+                  setTimeout(runSeqWithTimeout, fadeTime);
+                } else {
+                  runningSequence = null;
+                }
               })
               .catch(error => console.error(error));
           }
@@ -202,9 +220,7 @@ var activeRegionColor = "00FFFF";
         })
         .catch(error => console.error(error));
 
-      return function() {
-        stopSequence = true;
-      };
+      return stopCurrentSequence;
     };
 
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
