@@ -164,16 +164,16 @@ var activeRegionColor = "00FFFF";
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
-//     function runSeqPixels(currentURL, color, fadeTime, direction) {
-//       let url = new URL(`${currentURL}seqPixels`);
-//       url.searchParams.append('color', color);
-//       url.searchParams.append('fadeTime', fadeTime);
-//       url.searchParams.append('direction', direction);
-// 
-//       return fetch(url)
-//         .then(response => response.json())
-//         .catch(error => console.error(error));
-//     }
+    function runSeqPixels(currentURL, color, fadeTime, direction) {
+      let url = new URL(`${currentURL}seqPixels`);
+      url.searchParams.append('color', color);
+      url.searchParams.append('fadeTime', fadeTime);
+      url.searchParams.append('direction', direction);
+
+      return fetch(url)
+        .then(response => response.json())
+        .catch(error => console.error(error));
+    }
 
     rats.ledFadeActive = function (pixcolor) {
       const currentURL = window.location.href;    
@@ -185,6 +185,7 @@ var activeRegionColor = "00FFFF";
         .then(response => response.json())
         .then(() => {
           // Perform any other actions on the LEDs after the fadePixels is completed
+          rats.runSeqPixels(pixcolor, 50, 'forward');
         })
         .catch(error => console.error(error));
     };
