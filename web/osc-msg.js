@@ -177,7 +177,7 @@ var activeRegionColor = "00FFFF";
 
     rats.ledFadeActive = function (pixcolor) {
       const currentURL = window.location.href;    
-      const fadeTime = 500;
+      const fadeTime = 30;
       let url = new URL(`${currentURL}fadePixels`);
       url.searchParams.append('color', pixcolor);
       url.searchParams.append('fadeTime', fadeTime);
@@ -290,8 +290,7 @@ var activeRegionColor = "00FFFF";
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
-              rats.ledFadeActive(activeRegionColor);      
-              bar.style.backgroundColor = "blue";
+              bar.style.backgroundColor = activeRegionColor;
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
                   note.innerHTML = lastNote;
@@ -332,7 +331,6 @@ var activeRegionColor = "00FFFF";
     };
 
     rats.getDefaultTrack = function () {
-//       rats.ledFadeActive(activeRegionColor);        
       const currentURL = window.location.href;        
       let url = new URL(`${currentURL}config`);
       return fetch(url)
