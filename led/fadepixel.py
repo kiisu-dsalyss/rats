@@ -1,5 +1,6 @@
 import argparse
 import time
+from itertools import cycle
 from rpi_ws281x import PixelStrip, Color
 
 # LED strip configuration:
@@ -11,21 +12,32 @@ LED_BRIGHTNESS = 255   # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+last_color = None
+
 def set_color(strip, color):
     """Set color of all pixels to given color"""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
     strip.show()
 
-last_color = None  # global variable to store last color
-
-last_color = None  # global variable to store last color
-
-def fade_out(strip, colors, fade_steps, color_changed=False):
-    """Fade out the given colors over the specified number of steps"""
+def fade_out(strip, color, fade_steps, color_changed=False):
+    """Fade out the given color over the specified number of steps"""
     global last_color
     if color_changed or last_color is None:  # fade out only if color has changed or it's the first time
-        for color in itertools.cycle(colors):
+        for j in range(fade_steps, 0, -1):
+            brightness = int(j * (255/fade_steps))
+            r = (color >> 16) & 0xFF
+            g = (color >> 8) & 0xFF
+            b = color & 0xFF
+            strip.setBrightness(brightness)
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, Color(r, g, b))
+            strip.show()
+            time.sleep(0.01)
+        last_color = color
+    else:  # repeat the fade in and out pattern with the current color
+        colors = cycle([color])
+        for color in colors:
             for j in range(fade_steps, 0, -1):
                 brightness = int(j * (255/fade_steps))
                 r = (color >> 16) & 0xFF
@@ -40,74 +52,26 @@ def fade_out(strip, colors, fade_steps, color_changed=False):
                 brightness = int(j * (255/fade_steps))
                 r = (color >> 16) & 0xFF
                 g = (color >> 8) & 0xFF
-                b = color & 0xFF
-                strip.setBrightness(brightness)
-                for i in range(strip.numPixels()):
-                    strip.setPixelColor(i, Color(r, g, b))
-                strip.show()
-                time.sleep(0.01)
-            last_color = color
-            if color_changed:  # stop looping if color has changed
-                break
-    else:
-        # Fade out the current color before fading in the new color
-        for j in range(fade_steps, 0, -1):
-            brightness = int(j * (255/fade_steps))
-            r = (last_color >> 16) & 0xFF
-            g = (last_color >> 8) & 0xFF
-            b = last_color & 0xFF
-            strip.setBrightness(brightness)
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(r, g, b))
-            strip.show()
-            time.sleep(0.01)
-        for j in range(0, fade_steps):
-            brightness = int(j * (255/fade_steps))
-            r = (last_color >> 16) & 0xFF
-            g = (last_color >> 8) & 0xFF
-            b = last_color & 0xFF
-            strip.setBrightness(brightness)
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(r, g, b))
-            strip.show()
-            time.sleep(0.01)
-        # Fade in the new color
-        for j in range(0, fade_steps):
-            brightness = int(j * (255/fade_steps))
-            r = (colors[0] >> 16) & 0xFF
-            g = (colors[0] >> 8) & 0xFF
-            b = colors[0] & 0xFF
-            strip.setBrightness(brightness)
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(r, g, b))
-            strip.show()
-            time.sleep(0.01)
-        for j in range(fade_steps,
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Set NeoPixel color')
+                b = color
+def main():
+    parser = argparse.ArgumentParser(description='Fade LED pixels in and out.')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
-    parser.add_argument('time_ms', type=int, help='Time to display color in milliseconds')
-    parser.add_argument('--fade_steps', type=int, default=100, help='Number of steps to fade out')
+    parser.add_argument('hold_time', type=int, help='Hold time in seconds')
+    parser.add_argument('--fade', type=int, default=100, help='Number of steps to fade out')
     args = parser.parse_args()
+
+    # Convert hex color code to integer value
+    color = int(args.color, 16)
 
     # Create PixelStrip object with appropriate configuration.
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     # Initialize the library (must be called once before other functions).
     strip.begin()
 
-    # Convert hex color code to integer value
-    color = int(args.color, 16)
+    # Fade out the LEDs with the current color and repeat the pattern
+    while True:
+        fade_out(strip, color, args.fade)
+        time.sleep(args.hold_time)
 
-    # Set all pixels to given color
-    set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
-
-    # Wait for specified time
-    time.sleep(args.time_ms / 1000)
-
-    # Fade out the LEDs
-    fade_out(strip, color, args.fade_steps)
-
-    # Turn off all LEDs
-    set_color(strip, Color(0, 0, 0))
+if __name__ == '__main__':
+    main()
