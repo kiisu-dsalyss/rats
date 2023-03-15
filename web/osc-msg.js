@@ -309,7 +309,7 @@ var progress;
       region = currentRegion;
       var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
-      document.getElementById('nextth').innerHTML = document.getElementById("progressBar").value;
+//       document.getElementById('nextth').innerHTML = document.getElementById("progressBar").value;
     };
 
     rats.beatPosition = function (data) {
