@@ -21,8 +21,6 @@ def light_led(strip, index, color, fade_time):
     time.sleep(fade_time / 1000)
 
 if __name__ == '__main__':
-    # Clean up GPIO pins
-    GPIO.cleanup()
     parser = argparse.ArgumentParser(description='Set NeoPixel sequence')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
     parser.add_argument('fade_time', type=int, help='Time to fade between LEDs in milliseconds')
@@ -39,16 +37,15 @@ if __name__ == '__main__':
 
     # Light up each LED in sequence
     if args.direction == 'forward':
-        i = 0
-        while True:
+        for i in range(strip.numPixels()):
             light_led(strip, i, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF), args.fade_time)
-            i = (i + 1) % strip.numPixels()
     elif args.direction == 'reverse':
-        i = strip.numPixels() - 1
-        while True:
+        for i in range(strip.numPixels() - 1, -1, -1):
             light_led(strip, i, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF), args.fade_time)
-            i = (i - 1) % strip.numPixels()
 
+    # Turn off all LEDs
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, Color(0, 0, 0))
+    strip.show()
     # Clean up GPIO pins
     GPIO.cleanup()
-
