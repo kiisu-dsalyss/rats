@@ -11,8 +11,6 @@ LED_BRIGHTNESS = 255   # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-last_color = None
-
 def set_color(strip, color):
     """Set color of all pixels to given color"""
     for i in range(strip.numPixels()):
@@ -39,25 +37,22 @@ if __name__ == '__main__':
     parser.add_argument('--fade_steps', type=int, default=100, help='Number of steps to fade out')
     args = parser.parse_args()
 
-    global last_color
+    # Create PixelStrip object with appropriate configuration.
+    strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+    # Initialize the library (must be called once before other functions).
+    strip.begin()
+
     # Convert hex color code to integer value
     color = int(args.color, 16)
 
-    # Only update the LEDs if the color has changed
-    if color != last_color:
-        # Create PixelStrip object with appropriate configuration.
-        strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
-        # Initialize the library (must be called once before other functions).
-        strip.begin()
+    # Set all pixels to given color
+    set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
 
-        # Set all pixels to given color
-        set_color(strip, Color((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF))
+    # Wait for specified time
+    time.sleep(args.time_ms / 1000)
 
-        # Wait for specified time
-        time.sleep(args.time_ms / 1000)
+    # Fade out the LEDs
+    fade_out(strip, color, args.fade_steps)
 
-        # Fade out the LEDs
-        fade_out(strip, color, args.fade_steps)
-
-        # Turn off all LEDs
-        set_color(strip, Color(0, 0, 
+    # Turn off all LEDs
+    set_color(strip, Color(0, 0, 0))
