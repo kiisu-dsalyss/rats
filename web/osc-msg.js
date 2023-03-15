@@ -306,6 +306,7 @@ var activeRegionColor = "00FFFF";
       rats.updatePrevious();
       rats.updateNext();
       region = currentRegion;
+      rats.ledFadeActive(regions[`${currentRegion}`].Color);
     };
 
     rats.beatPosition = function (data) {
@@ -328,7 +329,6 @@ var activeRegionColor = "00FFFF";
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);
-      setInterval(rats.ledFadeActive(activeRegionColor), 50);
     };
 
     rats.getDefaultTrack = function () {
