@@ -40,6 +40,7 @@ const eventListener = async (event) => {
 
   // Add the "Reboot" button to the config menu
   addRebootButton();
+  addShutdownButton();
 
   // Remove the dblclick event listener from the document
   document.removeEventListener('dblclick', eventListener);
@@ -103,6 +104,21 @@ const addRebootButton = () => {
     }
   });
   configMenu.appendChild(rebootButton);
+};
+
+const addShutdownButton = () => {
+  const shutdownButton = document.createElement('button');
+  shutdownButton.textContent = 'Shutdown!';
+  shutdownButton.addEventListener('click', async () => {
+    try {
+      const response = await fetch(`${serverUrl}shutdown`);
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+  configMenu.appendChild(shutdownButton);
 };
 
 // Keyboard for configMenu

@@ -14,7 +14,7 @@ const { exec } = require('child_process');
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-fadePixels(randomHexColor, 9500)
+fadePixels(randomHexColor, 12500)
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -191,6 +191,17 @@ app.get('/reboot', (req, res) => {
     res.status(200).json({ message: 'Reboot initiated' });
   });
 });
+
+app.get('/shutdown', (req, res) => {
+  exec('sudo shutdown now', (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error initiating shutdown' });
+    }
+    res.status(200).json({ message: 'Shutdown initiated' });
+  });
+});
+
 
 // Update config
 app.put('/config', (req, res) => {
