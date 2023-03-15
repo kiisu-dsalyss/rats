@@ -291,7 +291,6 @@ var activeRegionColor = "00FFFF";
 
           if (i === beat) {
               bar.style.backgroundColor = "blue";
-              rat.ledFadeActive(activeRegionColor);
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
                   note.innerHTML = lastNote;
@@ -329,6 +328,7 @@ var activeRegionColor = "00FFFF";
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);
+      setInterval(rats.ledFadeActive(activeRegionColor), 50);
     };
 
     rats.getDefaultTrack = function () {
