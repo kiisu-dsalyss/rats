@@ -306,7 +306,8 @@ var activeRegionColor = "00FFFF";
       rats.updatePrevious();
       rats.updateNext();
       region = currentRegion;
-      rats.ledFadeActive(regions[`${currentRegion}`].Color);
+      var ledColor = (rats.decimalToHex(+regions[`${currentRegion}`].Color));      
+      rats.ledFadeActive(ledColor);
     };
 
     rats.beatPosition = function (data) {
