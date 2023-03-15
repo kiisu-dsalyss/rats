@@ -17,18 +17,26 @@ def set_color(strip, color):
         strip.setPixelColor(i, color)
     strip.show()
 
-def fade_out(strip, color, fade_steps):
+last_color = None  # global variable to store last color
+
+def fade_out(strip, color, fade_steps, repeat=False):
     """Fade out the given color over the specified number of steps"""
-    for j in range(fade_steps, 0, -1):
-        brightness = int(j * (255/fade_steps))
-        r = (color >> 16) & 0xFF
-        g = (color >> 8) & 0xFF
-        b = color & 0xFF
-        strip.setBrightness(brightness)
-        for i in range(strip.numPixels()):
-            strip.setPixelColor(i, Color(r, g, b))
-        strip.show()
-        time.sleep(0.01)
+    global last_color
+    if color != last_color:  # only fade out if new color is received
+        for j in range(fade_steps, 0, -1):
+            brightness = int(j * (255/fade_steps))
+            r = (color >> 16) & 0xFF
+            g = (color >> 8) & 0xFF
+            b = color & 0xFF
+            strip.setBrightness(brightness)
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, Color(r, g, b))
+            strip.show()
+            time.sleep(0.01)
+        last_color = color
+    if repeat:  # repeat fade out if requested
+        fade_out(strip, color, fade_steps, repeat=True)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
