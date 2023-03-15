@@ -19,6 +19,10 @@ def set_color(strip, color):
 
 def fade_out(strip, color, fade_steps):
     """Fade out the given color over the specified number of steps"""
+    
+    # Turn off all pixels before fading out
+    set_color(strip, Color(0, 0, 0))
+    
     for j in range(fade_steps, 0, -1):
         brightness = int(j * (255/fade_steps))
         r = (color >> 16) & 0xFF
@@ -29,6 +33,7 @@ def fade_out(strip, color, fade_steps):
             strip.setPixelColor(i, Color(r, g, b))
         strip.show()
         time.sleep(0.01)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')
