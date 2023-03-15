@@ -14,7 +14,7 @@ const { exec } = require('child_process');
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
 const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
-fadePixels(randomHexColor, 22500)
+fadePixels(randomHexColor, 30500)
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -97,8 +97,8 @@ app.get('/fadePixels', async (req, res) => {
         const seqOutput = await seqPixels(color, 30, direction);
         console.log('Seq output:', seqOutput);
         isForward = !isForward;
-      }, fadeTime + 1); // add 1ms to the interval to ensure a delay between calls to seqPixels
-    }, fadeTime + 5);
+      }, fadeTime + 15); // add 1ms to the interval to ensure a delay between calls to seqPixels
+    }, 5);
     
   } catch (error) {
     res.status(500).json({ message: 'Error running fadePixels', error });
