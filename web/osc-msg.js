@@ -198,7 +198,7 @@ var lyrics = {};
           .then(response => response.json())
           .then(() => {
             for (let i = 0; i < 4; i++) {
-              rats.runSeqPixels(currentURL, regionColor, (fadeTime / 3), 'forward');
+//               rats.runSeqPixels(currentURL, regionColor, (fadeTime / 2), 'forward');
             }
           })
           .catch(error => console.error(error));
