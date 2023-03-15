@@ -3,7 +3,6 @@ var regions = {};
 var region;
 var lyrics = {};
 var activeRegionColor = "00FFFF";
-var lcount = 0;
 
 (function () {
     "use strict";
@@ -199,7 +198,6 @@ var lcount = 0;
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
-      rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
      
@@ -310,8 +308,7 @@ var lcount = 0;
       region = currentRegion;
       var ledColor = (rats.decimalToHex(+regColor));
       rats.ledFadeActive(ledColor);
-      document.getElementById('nextth').innerHTML = lcount;
-      lcount ++;
+      document.getElementById('nextth').innerHTML = ledColor;
     };
 
     rats.beatPosition = function (data) {
