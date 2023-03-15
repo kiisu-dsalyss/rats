@@ -13,7 +13,8 @@ const { fadePixels, seqPixels } = require('./led/neopix');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
-seqPixels('00FFFF', 300, 'reverse')
+const randomHexColor = Math.floor(Math.random()*16777215).toString(16);
+seqPixels(randomHexColor, 400, 'reverse')
 var osc = require("osc"),
     WebSocket = require("ws");
 
@@ -94,7 +95,7 @@ app.get('/fadePixels', async (req, res) => {
         const seqOutput = await seqPixels(color, fadeTime, 'forward');
         console.log('Seq output:', seqOutput);
       }, fadeTime + 10); // add 1ms to the interval to ensure a delay between calls to seqPixels
-    }, fadeTime + 1);
+    }, 1);
     
   } catch (error) {
     res.status(500).json({ message: 'Error running fadePixels', error });
