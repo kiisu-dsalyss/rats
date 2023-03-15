@@ -19,12 +19,14 @@ def set_color(strip, color):
 
 def fade_out(strip, color, fade_steps):
     """Fade out the given color over the specified number of steps"""
+    current_color = color
+    current_fade_steps = fade_steps
     while True:
-        for j in range(fade_steps, 0, -1):
-            brightness = int(j * (255/fade_steps))
-            r = (color >> 16) & 0xFF
-            g = (color >> 8) & 0xFF
-            b = color & 0xFF
+        for j in range(current_fade_steps, 0, -1):
+            brightness = int(j * (255/current_fade_steps))
+            r = (current_color >> 16) & 0xFF
+            g = (current_color >> 8) & 0xFF
+            b = current_color & 0xFF
             strip.setBrightness(brightness)
             for i in range(strip.numPixels()):
                 strip.setPixelColor(i, Color(r, g, b))
@@ -32,10 +34,13 @@ def fade_out(strip, color, fade_steps):
             time.sleep(0.01)
             # Check for new command every 0.1 seconds
             if time.monotonic() % 0.1 == 0:
-                # Check for new command here
-                if new_command_received():
-                    return
-
+                # Check for new color or fade_steps
+                if color != current_color or fade_steps != current_fade_steps:
+                    current_color = color
+                    current_fade_steps = fade_steps
+                    break
+    strip.setBrightness(0)
+    strip.show()
 
 def fade_to_brightness(strip, color, target_brightness):
     """Fade the given color to the specified brightness level"""
