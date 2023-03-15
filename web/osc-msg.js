@@ -157,6 +157,7 @@ var activeRegionColor = "00FFFF";
       }      
       if (msg.address === "/lastregion/name") {
         rats.updateActive(msg.args[0]);
+        rats.ledFadeActive(activeRegionColor);          
       }
     };
   
@@ -289,7 +290,6 @@ var activeRegionColor = "00FFFF";
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
-              rats.ledFadeActive(activeRegionColor);          
               bar.style.backgroundColor = activeRegionColor;
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
