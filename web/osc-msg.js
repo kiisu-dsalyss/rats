@@ -2,6 +2,7 @@ var rats = rats || {};
 var regions = {};
 var region;
 var lyrics = {};
+var activeRegionColor = "00FFFF";
 
 (function () {
     "use strict";
@@ -240,8 +241,9 @@ var lyrics = {};
             thisRegionName = regionNames[currentRegionIndex];
             thisRegionColor = regions[thisRegionName].Color;
         }
+        activeRegionColor = nextRegionColor;        
         // Update the next region banner element
-        rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
+        rats.updateBanner("activeRegion", nextRegionName, activeRegionColor);
     }    
     
     rats.updateNext = function() {
@@ -287,7 +289,6 @@ var lyrics = {};
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
-              rats.ledFadeActive("00ffff", 100);
               bar.style.backgroundColor = "blue";
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
@@ -325,7 +326,8 @@ var lyrics = {};
     rats.update = function () {
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
-      setInterval(rats.progressBar, 30);      
+      setInterval(rats.progressBar, 30);
+      rats.ledFadeActive("00FFFF", 100);    
     };
 
     rats.getDefaultTrack = function () {
