@@ -163,34 +163,28 @@ var lyrics = {};
         document.getElementById("activeHeader").innerHTML = rats.beatPosition;
     };
 
-    function runSeqPixels(currentURL, color, fadeTime, direction) {
-      let url = new URL(`${currentURL}seqPixels`);
-      url.searchParams.append('color', color);
-      url.searchParams.append('fadeTime', fadeTime);
-      url.searchParams.append('direction', direction);
+//     function runSeqPixels(currentURL, color, fadeTime, direction) {
+//       let url = new URL(`${currentURL}seqPixels`);
+//       url.searchParams.append('color', color);
+//       url.searchParams.append('fadeTime', fadeTime);
+//       url.searchParams.append('direction', direction);
+// 
+//       return fetch(url)
+//         .then(response => response.json())
+//         .catch(error => console.error(error));
+//     }
 
-      return fetch(url)
-        .then(response => response.json())
-        .catch(error => console.error(error));
-    }
-
-    rats.ledFadeActive = function (bannerElementId, regionColor, currentURL) {
+    rats.ledFadeActive = function (pixcolor, currentURL) {
       const fadeTime = 500;
-
-      if (bannerElementId === 'activeRegion') {
-        let url = new URL(`${currentURL}fadePixels`);
-        url.searchParams.append('color', regionColor);
-        url.searchParams.append('fadeTime', fadeTime);
-
-        fetch(url)
-          .then(response => response.json())
-          .then(() => {
-            // Perform any other actions on the LEDs after the fadePixels is completed
-          })
-          .catch(error => console.error(error));
-      } else {
-        // runSeqPixels(currentURL, '0000FF', fadeTime, 'forward');
-      }
+      let url = new URL(`${currentURL}fadePixels`);
+      url.searchParams.append('color', pixcolor);
+      url.searchParams.append('fadeTime', fadeTime);
+      fetch(url)
+        .then(response => response.json())
+        .then(() => {
+          // Perform any other actions on the LEDs after the fadePixels is completed
+        })
+        .catch(error => console.error(error));
     };
 
 
@@ -202,7 +196,6 @@ var lyrics = {};
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
       document.getElementById(bannerElementId).style.color = color;
-      // Call the ledFadeActive function
       rats.ledFadeActive(bannerElementId, backColor, currentURL);
     };
 
@@ -294,6 +287,7 @@ var lyrics = {};
           document.getElementById(`lastbar${i}`).innerHTML = lyrics.Position[last + '.' +  i  + ".00"] || ".";
 
           if (i === beat) {
+              rats.ledFadeActive("00ffff", 100);
               bar.style.backgroundColor = "blue";
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
