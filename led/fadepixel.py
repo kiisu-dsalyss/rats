@@ -14,45 +14,47 @@ LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 last_color = None
 
-def set_color(strip, color):
+def set_color(strip, color, brightness=LED_BRIGHTNESS):
     """Set color of all pixels to given color"""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
+    strip.setBrightness(brightness)
     strip.show()
 
 def fade_out(strip, color, fade_steps, color_changed=False):
     """Fade out the given color over the specified number of steps"""
     global last_color
     if color_changed or last_color is None:  # fade out only if color has changed or it's the first time
+        original_brightness = strip.getBrightness()
         for j in range(fade_steps, 0, -1):
-            brightness = int(j * (255/fade_steps))
+            brightness = int(j * (original_brightness / fade_steps))
             r = (color >> 16) & 0xFF
             g = (color >> 8) & 0xFF
             b = color & 0xFF
-            strip.setBrightness(brightness)
-            for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(r, g, b))
-            strip.show()
+            set_color(strip, Color(r, g, b), brightness)
             time.sleep(0.01)
+        strip.setBrightness(0)
+        strip.show()
         last_color = color
     else:  # repeat the fade in and out pattern with the current color
         colors = cycle([color])
         for color in colors:
+            original_brightness = strip.getBrightness()
             for j in range(fade_steps, 0, -1):
-                brightness = int(j * (255/fade_steps))
+                brightness = int(j * (original_brightness / fade_steps))
                 r = (color >> 16) & 0xFF
                 g = (color >> 8) & 0xFF
                 b = color & 0xFF
-                strip.setBrightness(brightness)
-                for i in range(strip.numPixels()):
-                    strip.setPixelColor(i, Color(r, g, b))
-                strip.show()
+                set_color(strip, Color(r, g, b), brightness)
                 time.sleep(0.01)
             for j in range(0, fade_steps):
-                brightness = int(j * (255/fade_steps))
+                brightness = int(j * (original_brightness / fade_steps))
                 r = (color >> 16) & 0xFF
                 g = (color >> 8) & 0xFF
-                b = color
+                b = color & 0xFF
+                set_color(strip, Color(r, g, b), brightness)
+                time.sleep(0.01)
+
 def main():
     parser = argparse.ArgumentParser(description='Fade LED pixels in and out.')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
