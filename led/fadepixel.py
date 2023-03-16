@@ -16,6 +16,7 @@ LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 lock = threading.Lock()
 
 def set_color(strip, color):
+    strip.cleanup()
     """Set color of all pixels to given color"""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
