@@ -16,7 +16,6 @@ LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 lock = threading.Lock()
 
 def set_color(strip, color):
-    strip.cleanup()
     """Set color of all pixels to given color"""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
@@ -61,6 +60,8 @@ def process_request(args):
 
     # Release the lock
     lock.release()
+    strip.cleanup()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set NeoPixel color')

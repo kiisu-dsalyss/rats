@@ -16,7 +16,6 @@ LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 lock = threading.Lock()
 
 def light_led(strip, index, color, fade_time):
-    strip.cleanup()
     """Light up one LED at a time, turning off the previous LED"""
     prev_index = (index - 1) % strip.numPixels()
     strip.setPixelColor(prev_index, Color(0, 0, 0))
@@ -51,6 +50,7 @@ def process_request(args):
 
     # Release the lock
     lock.release()
+    strip.cleanup()
 
 if __name__ == '__main__':
     # Clean up GPIO pins
