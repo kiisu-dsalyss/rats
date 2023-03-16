@@ -52,6 +52,7 @@ def process_request(args):
     lock.release()
 
 if __name__ == '__main__':
+    # Clean up GPIO pins
     parser = argparse.ArgumentParser(description='Set NeoPixel sequence')
     parser.add_argument('color', help='Hex color code (e.g. FF0000 for red)')
     parser.add_argument('fade_time', type=int, help='Time to fade between LEDs in milliseconds')
@@ -60,7 +61,7 @@ if __name__ == '__main__':
 
     # Acquire the lock before processing the request
     lock.acquire()
-
+    GPIO.cleanup()
     # Create a new thread to process the request
     t = threading.Thread(target=process_request, args=(args,))
     t.start()
