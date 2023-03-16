@@ -76,6 +76,24 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 let intervalId = null;
 let isForward = true;
 
+// Define a function to reset the endpoints
+function resetEndpoints() {
+  // Clear the interval
+  console.log("Clearing endpoints!");
+  clearInterval(resetIntervalId);
+  resetIntervalId = null;
+
+  // Clear any pending requests
+  app._router.stack.forEach(function (route) {
+    if (route.route && route.route.path) {
+      route.route.stack.splice(-1);
+    }
+  });
+}
+
+// Schedule the resetEndpoints function to run every 5 minutes
+resetIntervalId = setInterval(resetEndpoints, 5 * 60 * 1000);
+
 app.get('/fadePixels', async (req, res) => {
   const color = req.query.color || 'blue';
   const fadeTime = req.query.fadeTime || 1000;
