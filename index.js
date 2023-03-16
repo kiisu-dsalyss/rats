@@ -116,17 +116,17 @@ function registerEndpoints() {
     try {
       const output = await fadePixels(color, fadeTime);
       res.status(200).json({ message: `Fading pixels to ${color} over ${fadeTime} milliseconds`, output });
-    
-      // wait for fadeTime + 5ms before starting the loop
-      setTimeout(() => {
-        intervalId = setInterval(async () => {
-          const direction = isForward ? 'forward' : 'reverse';
-          const seqOutput = await seqPixels(color, 30, direction);
-          console.log('Seq output:', seqOutput);
-          isForward = !isForward;
-        }, fadeTime + 15); // add 1ms to the interval to ensure a delay between calls to seqPixels
-      }, 5);
-    
+//     
+//       // wait for fadeTime + 5ms before starting the loop
+//       setTimeout(() => {
+//         intervalId = setInterval(async () => {
+//           const direction = isForward ? 'forward' : 'reverse';
+//           const seqOutput = await seqPixels(color, 30, direction);
+//           console.log('Seq output:', seqOutput);
+//           isForward = !isForward;
+//         }, fadeTime + 15); // add 1ms to the interval to ensure a delay between calls to seqPixels
+//       }, 5);
+//     
     } catch (error) {
       res.status(500).json({ message: 'Error running fadePixels', error });
     }
