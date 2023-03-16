@@ -75,6 +75,7 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 
 let intervalId = null;
 let isForward = true;
+let resetIntervalId = null;
 
 // Define a function to reset the endpoints
 function resetEndpoints() {
