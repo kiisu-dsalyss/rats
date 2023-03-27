@@ -28,7 +28,7 @@ var neopixelColor = "00FFFF";
     rats.connectNeoPixel = function () {
       const currentURL = window.location.href;
       const parts = currentURL.split('/');
-      const ipAddress = parts[2];
+      const ipAddress = parts[2].split(':')[0];
       const neoPixelPort = 8082; // Replace with your NeoPixel WebSocket server port
       rats.neoPixelSocket = new WebSocket(`ws://${ipAddress}:${neoPixelPort}`);
     };
@@ -230,7 +230,6 @@ var neopixelColor = "00FFFF";
             thisRegionName = regionNames[currentRegionIndex];
             thisRegionColor = regions[thisRegionName].Color;
         }
-        neopixelColor = rats.decimalToHex(+nextRegionColor));
         // Update the next region banner element
         rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
     }    
