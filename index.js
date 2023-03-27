@@ -6,6 +6,8 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
+const { exec } = require('child_process');
+
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -141,5 +143,30 @@ wss.on("connection", function (socket) {
 
     var relay = new osc.Relay(udpPort, socketPort, {
         raw: true
+    });
+});
+
+// NeoPixel WebSocket server
+const neopixelWss = new WebSocket.Server({ port: config.neopixelWsPort });
+
+neopixelWss.on('connection', function (socket) {
+    console.log("A NeoPixel Web Socket connection has been established!");
+
+    socket.on('message', function (message) {
+        const data = JSON.parse(message);
+
+        if (data.type === 'neopixel') {
+            const color = data.color;
+            const pythonCommand = `sudo python3 ./python-scripts/neopixel_control.py "${color}"`;
+
+            exec(pythonCommand, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
+            });
+        }
     });
 });
