@@ -231,7 +231,6 @@ var neopixelColor = "00FFFF";
             thisRegionColor = regions[thisRegionName].Color;
         }
         // Update the next region banner element
-        rats.sendNeoPixelColor(neopixelColor);        
         rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
     }    
     
@@ -314,6 +313,8 @@ var neopixelColor = "00FFFF";
     
     rats.update = function () {
       rats.connectNeoPixel();
+      setInterval(rats.sendNeoPixelColor(neopixelColor);        
+, 30);            
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      
