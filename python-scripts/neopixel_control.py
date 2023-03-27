@@ -12,9 +12,13 @@ LED_INVERT = False    # True to invert the signal (when using NPN transistor lev
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 def colorWipe(strip, color):
+    r = int(color[1:3], 16)
+    g = int(color[3:5], 16)
+    b = int(color[5:], 16)
     for i in range(strip.numPixels()):
-        strip.setPixelColor(i, color)
+        strip.setPixelColor(i, Color(r, g, b))
     strip.show()
+
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
