@@ -6,6 +6,8 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
+const { exec } = require('child_process');
+
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
