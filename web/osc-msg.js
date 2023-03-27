@@ -313,8 +313,7 @@ var neopixelColor = "00FFFF";
     
     rats.update = function () {
       rats.connectNeoPixel();
-      setInterval(rats.sendNeoPixelColor(neopixelColor);        
-, 30);            
+      setInterval(rats.sendNeoPixelColor(neopixelColor), 30);            
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      
