@@ -231,6 +231,7 @@ var neopixelColor = "00FFFF";
             thisRegionColor = regions[thisRegionName].Color;
         }
         // Update the next region banner element
+        rats.sendNeoPixelColor(neopixelColor);        
         rats.updateBanner("activeRegion", nextRegionName, nextRegionColor);
     }    
     
@@ -278,7 +279,6 @@ var neopixelColor = "00FFFF";
 
           if (i === beat) {
               bar.style.backgroundColor = "blue";
-              rats.sendNeoPixelColor(neopixelColor);
               if(lyric !== '.') {
                   lastNote = lyric; // only assign a non '.' value 
                   note.innerHTML = lastNote;
