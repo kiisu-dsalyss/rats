@@ -22,6 +22,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     hex_color = sys.argv[1]
+    print(hex_color);
     color = Color(int(hex_color[1:3], 16), int(hex_color[3:5], 16), int(hex_color[5:], 16))
 
     # Create NeoPixel object with appropriate configuration.
@@ -32,6 +33,5 @@ if __name__ == '__main__':
 
     # Set the color and show it on the strip
     colorWipe(strip, color)
-    print(color);
     time.sleep(1)
     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
