@@ -151,14 +151,26 @@ wss.on("connection", function (socket) {
         args: [hexColor]
       };
 
-      PythonShell.run('neopixel_control.py', options, (err, results) => {
-        if (err) {
-          console.error(err);
-          socket.send(JSON.stringify({ error: 'Error running Python script' }));
-        } else {
-          socket.send(JSON.stringify({ message: 'NeoPixel color updated', results }));
-        }
-      });
+    const { spawn } = require('child_process');
+    const pythonScript = 'neopixel_control.py';
+    const pythonPath = './python-scripts/' + pythonScript;
+
+    const pythonProcess = spawn('sudo', ['python3', pythonPath, hexColor]);
+
+    pythonProcess.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+      socket.send(JSON.stringify({ message: 'NeoPixel color updated', data: data.toString() }));
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+      socket.send(JSON.stringify({ error: 'Error running Python script', data: data.toString() }));
+    });
+
+    pythonProcess.on('close', (code) => {
+      console.log(`Python script exited with code ${code}`);
+    });
+
     }
   });
 });
