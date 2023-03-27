@@ -185,8 +185,6 @@ var neopixelColor = "00FFFF";
       // Update the banner element      
       var backColor = (rats.decimalToHex(+regionColor));
       neopixelColor = backColor;
-      document.getElementById("nexty").style.backgroundColor =  "#" + neopixelColor;
-      document.getElementById("nexty").innerHTML = neopixelColor;
       rats.sendNeoPixelColor(neopixelColor);                  
       var color = rats.getComplimentaryColor(backColor);
       document.getElementById(bannerElementId).innerHTML = regionName || "";
