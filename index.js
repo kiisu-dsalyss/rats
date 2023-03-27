@@ -147,7 +147,7 @@ wss.on("connection", function (socket) {
 });
 
 // NeoPixel WebSocket server
-const neopixelWss = new WebSocket.Server({ port: config.neopixelWsPort });
+const neopixelWss = new WebSocket.Server({ port: 8082 });
 
 neopixelWss.on('connection', function (socket) {
     console.log("A NeoPixel Web Socket connection has been established!");
