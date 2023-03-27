@@ -157,7 +157,7 @@ neopixelWss.on('connection', function (socket) {
 
         if (data.type === 'neopixel') {
             const color = data.color;
-            const pythonCommand = `sudo python3 neopixel_control.py "${color}"`;
+            const pythonCommand = `sudo python3 ./python-scripts/neopixel_control.py "${color}"`;
 
             exec(pythonCommand, (error, stdout, stderr) => {
                 if (error) {
