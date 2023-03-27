@@ -6,7 +6,6 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
-const { PythonShell } = require('python-shell'); // Add this line
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -70,11 +69,11 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
-
+// Set up a route to serve the config data as JSON
 app.get('/config', (req, res) => {
   res.json(config);
 });
-
+// Get the local IP address of the device
 app.get('/ip', (req, res) => {
   const networkInterfaces = os.networkInterfaces();
   let ipAddress = '';
@@ -97,8 +96,11 @@ app.get('/ip', (req, res) => {
   }
 });
 
+// Update config
 app.put('/config', (req, res) => {
   const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
+
+  // Validate the input here
 
   const newConfig = {
     ip,
@@ -127,50 +129,42 @@ app.put('/config', (req, res) => {
   config.defaultTrack = newConfig.defaultTrack;
 });
 
+
 app.listen(config.port, () => {
 });
 
 wss.on("connection", function (socket) {
-  console.log("A Web Socket connection has been established!");
-  var socketPort = new osc.WebSocketPort({
-    socket: socket
-  });
-
-  var relay = new osc.Relay(udpPort, socketPort, {
-    raw: true
-  });
-
-  // Add a new message event listener
-  socket.on("message", function (message) {
-    const data = JSON.parse(message);
-
-    if (data.type === "neopixel" && data.color) {
-      const hexColor = data.color;
-      const options = {
-        scriptPath: './python-scripts',
-        args: [hexColor]
-      };
-
-    const { spawn } = require('child_process');
-    const pythonScript = 'neopixel_control.py';
-    const pythonPath = './python-scripts/' + pythonScript;
-
-    const pythonProcess = spawn('sudo', ['python3', pythonPath, hexColor]);
-
-    pythonProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-      socket.send(JSON.stringify({ message: 'NeoPixel color updated', data: data.toString() }));
+    console.log("A Web Socket connection has been established!");
+    var socketPort = new osc.WebSocketPort({
+        socket: socket
     });
 
-    pythonProcess.stderr.on('data', (data) => {
-      console.error(`stderr: ${data}`);
-      socket.send(JSON.stringify({ error: 'Error running Python script', data: data.toString() }));
+    var relay = new osc.Relay(udpPort, socketPort, {
+        raw: true
     });
+});
 
-    pythonProcess.on('close', (code) => {
-      console.log(`Python script exited with code ${code}`);
+// NeoPixel WebSocket server
+const neopixelWss = new WebSocket.Server({ port: config.neopixelWsPort });
+
+neopixelWss.on('connection', function (socket) {
+    console.log("A NeoPixel Web Socket connection has been established!");
+
+    socket.on('message', function (message) {
+        const data = JSON.parse(message);
+
+        if (data.type === 'neopixel') {
+            const color = data.color;
+            const pythonCommand = `sudo python3 neopixel_control.py "${color}"`;
+
+            exec(pythonCommand, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
+            });
+        }
     });
-
-    }
-  });
 });
