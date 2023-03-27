@@ -182,8 +182,9 @@ var neopixelColor = "00FFFF";
     };
     
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
-      // Update the banner element
+      // Update the banner element      
       var backColor = (rats.decimalToHex(+regionColor));
+      rats.sendNeoPixelColor(backColor);                  
       var color = rats.getComplimentaryColor(backColor);
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
@@ -313,7 +314,6 @@ var neopixelColor = "00FFFF";
     
     rats.update = function () {
       rats.connectNeoPixel();
-      setInterval(rats.sendNeoPixelColor(neopixelColor), 30);            
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      
