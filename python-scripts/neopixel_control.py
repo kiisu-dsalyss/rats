@@ -47,4 +47,4 @@ if __name__ == '__main__':
     # Chase effect
     for j in range(3):
         colorChase(strip, color, 50)
-    colorWipe(strip, Color(0, 0, 0))  # Turn off the strip
+#     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip
