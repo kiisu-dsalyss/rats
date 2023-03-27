@@ -24,6 +24,7 @@ if __name__ == '__main__':
     hex_color = sys.argv[1]
     print(hex_color);
     color = Color(int(hex_color[1:3], 16), int(hex_color[3:5], 16), int(hex_color[5:], 16))
+    print(color);
 
     # Create NeoPixel object with appropriate configuration.
     strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
@@ -33,5 +34,5 @@ if __name__ == '__main__':
 
     # Set the color and show it on the strip
     colorWipe(strip, color)
-    time.sleep(1)
-    colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
+#     time.sleep(1)
+#     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
