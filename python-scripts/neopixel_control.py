@@ -32,5 +32,6 @@ if __name__ == '__main__':
 
     # Set the color and show it on the strip
     colorWipe(strip, color)
+    print(color);
     time.sleep(1)
     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
