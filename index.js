@@ -8,6 +8,7 @@ const fs = require('fs');
 const os = require('os');
 const Wifi = require('rpi-wifi-connection');
 const wifi = new Wifi();
+const { PythonShell } = require('python-shell'); // Add this line
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -71,11 +72,11 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
-// Set up a route to serve the config data as JSON
+
 app.get('/config', (req, res) => {
   res.json(config);
 });
-// Get the local IP address of the device
+
 app.get('/ip', (req, res) => {
   const networkInterfaces = os.networkInterfaces();
   let ipAddress = '';
@@ -132,8 +133,6 @@ app.get('/wifi/scan', async (req, res) => {
 app.put('/config', (req, res) => {
   const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
 
-  // Validate the input here
-
   const newConfig = {
     ip,
     baseUrl,
@@ -162,17 +161,38 @@ app.put('/config', (req, res) => {
   config.defaultTrack = newConfig.defaultTrack;
 });
 
-
 app.listen(config.port, () => {
 });
 
 wss.on("connection", function (socket) {
-    console.log("A Web Socket connection has been established!");
-    var socketPort = new osc.WebSocketPort({
-        socket: socket
-    });
+  console.log("A Web Socket connection has been established!");
+  var socketPort = new osc.WebSocketPort({
+    socket: socket
+  });
 
-    var relay = new osc.Relay(udpPort, socketPort, {
-        raw: true
-    });
+  var relay = new osc.Relay(udpPort, socketPort, {
+    raw: true
+  });
+
+  // Add a new message event listener
+  socket.on("message", function (message) {
+    const data = JSON.parse(message);
+
+    if (data.type === "neopixel" && data.color) {
+      const hexColor = data.color;
+      const options = {
+        scriptPath: './python-scripts',
+        args: [hexColor]
+      };
+
+      PythonShell.run('neopixel_control.py', options, (err, results) => {
+        if (err) {
+          console.error(err);
+          socket.send(JSON.stringify({ error: 'Error running Python script' }));
+        } else {
+          socket.send(JSON.stringify({ message: 'NeoPixel color updated', results }));
+        }
+      });
+    }
+  });
 });
