@@ -57,7 +57,8 @@ const createConfig = async () => {
   baseUrl: '${baseUrl}',
   rcvport: ${rcvport},
   clientport: ${clientport},
-  defaultTrack: ${defaultTrack}
+  defaultTrack: ${defaultTrack},
+  neopixelWsPort: 8082
 };`;
   fs.writeFileSync('./secrets/config.js', config);
 };

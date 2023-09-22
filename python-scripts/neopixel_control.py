@@ -16,6 +16,16 @@ def colorWipe(strip, color):
         strip.setPixelColor(i, color)
     strip.show()
 
+def colorChase(strip, color, wait_ms=50):
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, color)
+        if i > 0:
+            strip.setPixelColor(i-1, 0)
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+    strip.setPixelColor(strip.numPixels()-1, 0)
+    strip.show()
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print("Usage: python neopixel_control.py <hex_color>")
@@ -31,6 +41,14 @@ if __name__ == '__main__':
     strip.begin()
 
     # Set the color and show it on the strip
-    colorWipe(strip, color)
-    time.sleep(1)
+    colorWipe(strip, color)    time.sleep(1)
+
     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
+
+    # Chase effect
+    for j in range(3):
+        colorChase(strip, color, 50)
+#     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip
+    colorWipe(strip, color)
+
+main

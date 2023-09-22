@@ -2,6 +2,7 @@ var rats = rats || {};
 var regions = {};
 var region;
 var lyrics = {};
+var neopixelColor = "00FFFF";
 
 (function () {
     "use strict";
@@ -22,6 +23,23 @@ var lyrics = {};
       console.log("message", e);    
       };
 
+    };
+    
+    rats.connectNeoPixel = function () {
+      const currentURL = window.location.href;
+      const parts = currentURL.split('/');
+      const ipAddress = parts[2].split(':')[0];
+      const neoPixelPort = 8082; // Replace with your NeoPixel WebSocket server port
+      rats.neoPixelSocket = new WebSocket(`ws://${ipAddress}:${neoPixelPort}`);
+    };
+    
+    rats.sendNeoPixelColor = function (color) {
+      const message = {
+        type: 'neopixel',
+        color: color
+      };
+
+      rats.neoPixelSocket.send(JSON.stringify(message));
     };
     
     rats.decimalToHex = function (decimal) {
@@ -164,8 +182,10 @@ var lyrics = {};
     };
     
     rats.updateBanner = function (bannerElementId, regionName, regionColor) {
-      // Update the banner element
+      // Update the banner element      
       var backColor = (rats.decimalToHex(+regionColor));
+      neopixelColor = backColor;
+      rats.sendNeoPixelColor(neopixelColor);                  
       var color = rats.getComplimentaryColor(backColor);
       document.getElementById(bannerElementId).innerHTML = regionName || "";
       document.getElementById(bannerElementId).style.backgroundColor =  "#" + backColor;
@@ -294,6 +314,7 @@ var lyrics = {};
     };
     
     rats.update = function () {
+      rats.connectNeoPixel();
       setInterval(rats.getRegions, 300);
       setInterval(rats.getLyrics, 300);
       setInterval(rats.progressBar, 30);      

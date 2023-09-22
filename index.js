@@ -9,6 +9,7 @@ const os = require('os');
 const Wifi = require('rpi-wifi-connection');
 const wifi = new Wifi();
 const { PythonShell } = require('python-shell'); // Add this line
+const { exec } = require('child_process');
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -195,4 +196,29 @@ wss.on("connection", function (socket) {
       });
     }
   });
+});
+
+// NeoPixel WebSocket server
+const neopixelWss = new WebSocket.Server({ port: "8082" });
+
+neopixelWss.on('connection', function (socket) {
+    console.log("A NeoPixel Web Socket connection has been established!");
+
+    socket.on('message', function (message) {
+        const data = JSON.parse(message);
+
+        if (data.type === 'neopixel') {
+            const color = data.color;
+            const pythonCommand = `sudo python3 ./python-scripts/neopixel_control.py "${color}"`;
+
+            exec(pythonCommand, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`exec error: ${error}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
+            });
+        }
+    });
 });
