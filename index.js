@@ -6,8 +6,10 @@ const request = require('request');
 const region = require('./endpoints/region');
 const fs = require('fs');
 const os = require('os');
+const Wifi = require('rpi-wifi-connection');
+const wifi = new Wifi();
+const { PythonShell } = require('python-shell'); // Add this line
 const { exec } = require('child_process');
-
 
 const baseUrl = config.baseUrl;
 console.log(baseUrl);
@@ -71,11 +73,11 @@ const handleRequest = (endpoint, parseResponse) => (req, res) => {
 
 app.get('/region', handleRequest(region.endpoint, region.parseRegionResponse));
 app.get('/lyrics', handleRequest(lyrics.endpoint, lyrics.parseLyricsResponse));
-// Set up a route to serve the config data as JSON
+
 app.get('/config', (req, res) => {
   res.json(config);
 });
-// Get the local IP address of the device
+
 app.get('/ip', (req, res) => {
   const networkInterfaces = os.networkInterfaces();
   let ipAddress = '';
@@ -98,11 +100,39 @@ app.get('/ip', (req, res) => {
   }
 });
 
+// Set up a route to connect to a WiFi network
+app.post('/wifi', async (req, res) => {
+  const { ssid, password } = req.body;
+
+  try {
+    // Connect to the WiFi network
+    await wifi.connect({ ssid, psk: password });
+
+    // Send a success response
+    res.status(200).json({ message: `Connected to ${ssid}` });
+  } catch (error) {
+    console.error(error);
+
+    // Send an error response
+    res.status(500).json({ error: `Error connecting to ${ssid}` });
+  }
+});
+
+// Endpoint to get a list of available WiFi networks
+app.get('/wifi/scan', async (req, res) => {
+  try {
+    const networks = await wifi.scan();
+    res.status(200).json({ networks });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to scan for available WiFi networks.' });
+  }
+});
+
+
 // Update config
 app.put('/config', (req, res) => {
   const { ip, baseUrl, rcvport, clientport, defaultTrack } = req.body;
-
-  // Validate the input here
 
   const newConfig = {
     ip,
@@ -117,7 +147,8 @@ app.put('/config', (req, res) => {
   fs.writeFile('./secrets/config.js', `module.exports = ${JSON.stringify(newConfig)}`, (err) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'Error updating configuration file' });
+      res.status(500).json({ error: 'Error updating configuration file',
+       });
     } else {
       res.status(200).json({ message: 'Configuration file updated successfully' });
     }
@@ -131,19 +162,40 @@ app.put('/config', (req, res) => {
   config.defaultTrack = newConfig.defaultTrack;
 });
 
-
 app.listen(config.port, () => {
 });
 
 wss.on("connection", function (socket) {
-    console.log("A Web Socket connection has been established!");
-    var socketPort = new osc.WebSocketPort({
-        socket: socket
-    });
+  console.log("A Web Socket connection has been established!");
+  var socketPort = new osc.WebSocketPort({
+    socket: socket
+  });
 
-    var relay = new osc.Relay(udpPort, socketPort, {
-        raw: true
-    });
+  var relay = new osc.Relay(udpPort, socketPort, {
+    raw: true
+  });
+
+  // Add a new message event listener
+  socket.on("message", function (message) {
+    const data = JSON.parse(message);
+
+    if (data.type === "neopixel" && data.color) {
+      const hexColor = data.color;
+      const options = {
+        scriptPath: './python-scripts',
+        args: [hexColor]
+      };
+
+      PythonShell.run('neopixel_control.py', options, (err, results) => {
+        if (err) {
+          console.error(err);
+          socket.send(JSON.stringify({ error: 'Error running Python script' }));
+        } else {
+          socket.send(JSON.stringify({ message: 'NeoPixel color updated', results }));
+        }
+      });
+    }
+  });
 });
 
 // NeoPixel WebSocket server

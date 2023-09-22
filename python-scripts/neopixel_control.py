@@ -41,8 +41,9 @@ if __name__ == '__main__':
     strip.begin()
 
     # Set the color and show it on the strip
-    colorWipe(strip, color)
-    time.sleep(1)
+    colorWipe(strip, color)    time.sleep(1)
+
+    colorWipe(strip, Color(0, 0, 0))  # Turn off the strip after 1 second
 
     # Chase effect
     for j in range(3):
@@ -50,3 +51,4 @@ if __name__ == '__main__':
 #     colorWipe(strip, Color(0, 0, 0))  # Turn off the strip
     colorWipe(strip, color)
 
+main
